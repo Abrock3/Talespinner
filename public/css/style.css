@@ -5,11 +5,22 @@
   -ms-transform: translateY(+50%);
   transform: translateY(+50%);
   display: block;
+  margin: auto;
+}
+
+.card-body {
+  margin-bottom: 15px;
+}
+
+nav {
+  margin: auto;
 }
 
 ul {
   list-style: none;
 }
+
+
 
 #users {
   display: inline;
@@ -62,3 +73,10 @@ form {
   margin-right: 15px;
 }
 
+#searchBtn {
+  margin: auto;
+}
+
+h2 {
+  text-align: center;
+}

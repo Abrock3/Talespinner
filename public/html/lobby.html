@@ -18,48 +18,52 @@
 <div class="jumbotron jumbotron-fluid leFont" id="jumbo-lobby">
   <div class="container">
     <h1 class="display-4 text-center font-weight-bold">TaleSpinner</h1>
-    <h2>Please select a Library to get Started</h2>
-    <!-- <ul class="nav nav-pills">
-        <li class="nav-item">
-        </li>
-        <li class="nav-item dropdown text-dark">
-          <a class="nav-link dropdown-toggle text-dark btn-light active" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Get Started</a>
-          <div class="dropdown-menu tab-pane">
-            <a class="dropdown-item text-dark" href="#">Create a Library</a>
-            <a class="dropdown-item" href="#">Find an existing Library</a>
-            <div class="dropdown-divider"></div>
-            <a class="dropdown-item" href="#">View Recently visited Libraries</a>
-          </div>
-        </li>
-      </ul> -->
+    <h2>Please create a new library or enter an existing one</h2>
       <nav class="navbar navbar-light bg-light">
-        <a class="navbar-brand"><button class="btn btn-outline-secondary" type="button">Create a Library</button></a>
-        <button class="btn btn-sm btn-outline-secondary" type="button">View Previously Visited Libraries</button>
+        <a class="navbar-brand"><button class="btn btn-outline-secondary" id = "createLibrary" type="button">Create a Library</button></a>
+        <button class="btn btn-sm btn-outline-secondary" id = "viewLibrary" type="button">View Previously Visited Libraries</button>
         <form class="form-inline">
           <input class="form-control mr-sm-2" type="search" placeholder="Search for a Library" aria-label="Search">
-          <button class="btn btn-outline-secondary my-2 my-sm-0" type="submit">Search</button>
+          <button class="btn btn-outline-secondary my-2 my-sm-0" id = "searchBtn" type="submit">Search</button>
         </form>
       </nav>
   </div>
   <div class="row">
-    <div class="card col-sm-1 offset-sm-1" style="width: 18rem;">
+    <div class="card col-sm-1 offset-sm-1" id="create" style="width: 18rem; visibility: hidden">
       <div class="card-body">
-        <h5 class="card-title">Card title</h5>
-        <h6 class="card-subtitle mb-2 text-muted">Create a Library</h6>
-        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-        <a href="#" class="card-link">Card link</a>
-        <a href="#" class="card-link">Another link</a>
+        <h5 class="card-title text-dark">Create a library</h5>
+        <br>
+        <input class="form-control mr-sm-2" type="search" placeholder="Library name" aria-label="Search">
+        <br>
+
+        <button class="btn btn-outline-secondary my-2 my-sm-0" id = "searchBtn" type="submit">Search</button>
+        <!-- <a href="#" class="card-link">Card link</a>
+        <a href="#" class="card-link">Another link</a> -->
       </div>
     </div>
-    <div class="card col-sm-1 offset-sm-1" style="width: 18rem;">
+    <div class="card col-sm-1 offset-sm-1" id="history" style="width: 18rem; visibility: hidden">
       <div class="card-body">
-        <h5 class="card-title">Card title</h5>
-        <h6 class="card-subtitle mb-2 text-muted">Recenty visited Libraries</h6>
-        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-        <a href="#" class="card-link">Card link</a>
-        <a href="#" class="card-link">Another link</a>
+        <h5 class="card-title text-dark">Recently visited libraries</h5>
+        <br>
+        <ul class="card-text text-dark">
+          <li>Library 1 (linked)</li>
+          <li>Library 2 (linked)</li>
+        </ul>
+        <!-- <a href="#" class="card-link">Card link</a>
+        <a href="#" class="card-link">Another link</a> -->
       </div>
   </div>
+    <div class="card col-lg-1 offset-sm-1" id ="results" style="width: 24rem;  visibility: hidden">
+      <div class="card-body">
+        <h5 class="card-title text-dark">Search Results</h5>
+        <br>
+        <p class="card-text text-dark"> anchor tag taking user to that room // or creates room with previous configs
+        </p>
+        <!-- <a href="#" class="card-link">Card link</a>
+        <a href="#" class="card-link">Another link</a> -->
+      </div>
+  </div>
+  
 </div>
 </div>
 
