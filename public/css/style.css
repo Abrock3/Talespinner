@@ -4,6 +4,7 @@
   /* top: 50%; */
   -ms-transform: translateY(+50%);
   transform: translateY(+50%);
+  display: block;
 }
 
 ul {
@@ -52,3 +53,12 @@ font-family: 'Quintessential', cursive;
 .formatHelp{
   border:3px solid red;
 }
+
+.btn {
+  margin: 5px 25px;
+}
+
+form {
+  margin-right: 15px;
+}
+
