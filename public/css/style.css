@@ -1,7 +1,6 @@
 .card {
   text-align: center;
   position: absolute;
-  /* top: 50%; */
   -ms-transform: translateY(+50%);
   transform: translateY(+50%);
   display: block;
@@ -79,4 +78,16 @@ form {
 
 h2 {
   text-align: center;
+}
+
+.title-holder {
+  background-color: gray;
+}
+
+#history, #results {
+  top: 32px;
+}
+
+#searchBtn {
+  margin-top: 10px!important;
 }
