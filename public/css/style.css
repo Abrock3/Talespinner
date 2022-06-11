@@ -1,24 +1,54 @@
-header, .project:not(:last-child) {
-  border-bottom: 1px solid #ccc;
+.card {
+  text-align: center;
+  position: absolute;
+  /* top: 50%; */
+  -ms-transform: translateY(+50%);
+  transform: translateY(+50%);
 }
 
-.no-button {
-  background: none;
-  border: none;
-  padding: 0;
-  cursor: pointer;
-  color: #1b89bc;
-  text-decoration: none;
-  font-size: 100%;
+ul {
+  list-style: none;
 }
 
-.no-button:hover {
-  color: #065b83;
-  text-decoration: underline;
+#users {
+  display: inline;
 }
 
-.dollar-amount {
-  color: #056605;
-  font-weight: bold;
-  margin-left: -5px;
+/* li {
+  margin-bottom: 10px;
+} */
+
+.jumbotron {
+  color: white;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  height: 100vh;
+}
+
+#jumbo-landing {
+  background-image: url("../images/kittyoption.jpeg");
+}
+
+
+#jumbo-lobby {
+  background-image: url("../images/chairbooks.jpeg");
+}
+ 
+
+#jumbo-main {
+  background-image: url("../images/librarydesk.jpg");
+}
+
+
+.leFont{
+font-family: 'Quintessential', cursive;
+}
+
+.mainFont{
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+.formatHelp{
+  border:3px solid red;
 }
