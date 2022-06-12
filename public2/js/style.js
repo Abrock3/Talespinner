@@ -1,3 +1,13 @@
+// Landing Page
+var landingPageBtn = document.querySelector("#landingPageBtn")
+
+// landingPageBtn.addEventListener("click", function(e) {
+//     <login form appears>
+// })
+
+
+
+
 // Lobby 
 // Cards
 var createCard = document.querySelector("#create")
