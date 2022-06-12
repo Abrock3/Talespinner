@@ -136,3 +136,7 @@ h2 {
   position: relative;
   left: 140px;
 }
+
+.lobby-title {
+  border-radius:3%;
+}
