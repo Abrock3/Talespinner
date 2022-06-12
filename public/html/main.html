@@ -30,31 +30,30 @@
         <p class="card-text chat-main chat-messages overflow-auto mainFont mh-100 formatHelp">MESSAGES APPEAR HERE, chat
           created
           with js.</p>
-
       </div>
-      <div class="chat-form-container ms-5 mh-100 formatHelp" style="width: 50%">
+      <div class="chat-form-container ms-5 mh-100 formatHelp" style="width: 45%">
         <form class="formatHelp mh-100" id="chat-form">
           <input id="msg" type="text" placeholder="Type a Message" required autocomplete="off" />
-          <a href="#" class="btn sml btn-secondary mh-100">Submit</a>
+          <a href="#" class="btn sml btn-secondary mh-100" id="submitBtn">Submit</a>
         </form>
       </div>
+    </div>
+    <div class="book-container">
+      <img src="../images/standingbook_nobg_hd.png" class="card-img" alt="...">
+      <div class="text-container">
+        <h2 class="content" id="title">Library Title</h2>
+        <div class="content" id="text">generated content</div>
+      </div>
+      <!-- DO WE WANT A CONTINUE CONTAINER SO THE PAGE ISN'T BLANK? -->
+      <!-- <div class="text-container" id="continue-container">
+        <div class="content" id="continued">generated content</div>
+      </div> -->
+    </div>
     </div>
   </div>
 
   <!---------------Book--------------->
-  <div
-    class="card position-absolute bottom-0 start-50 translate-middle-x bg-transparent co-4 text-dark w-50 mh-100 position-absolute top-0 start-0 formatHelp">
-    <img src="../images/standingbook_nobg_hd.png" class="card-img formatHelp" alt="Open blank book on a stand"
-      style="height:950px">
-    <div class="card-img-overlay w-75 position-absolute top-50 start-50 translate-middle text-center mh-100 formatHelp">
-      <h5 class="card-title mh-100 formatHelp">Card title</h5>
-      <p class="card-text mh-100 formatHelp">This is a wider card with supporting text below as a natural lead-in to
-        additional
-        content. This content is a little bit longer.</p>
-      <p class="card-text mh-100 formatHelp">Last updated 3 mins ago</p>
-    </div>
-  </div>
-  </div>
+  
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qs/6.9.2/qs.min.js"
     integrity="sha256-TDxXjkAUay70ae/QJBEpGKkpVslXaHHayklIVglFRT4=" crossorigin="anonymous"></script>

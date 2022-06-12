@@ -60,9 +60,9 @@ font-family: 'Quintessential', cursive;
   font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
 
-.formatHelp{
+/* .formatHelp{
   border:3px solid red;
-}
+} */
 
 .btn {
   margin: 5px 25px;
@@ -90,4 +90,49 @@ h2 {
 
 #searchBtn {
   margin-top: 10px!important;
+}
+
+.container {
+  position: relative;
+}
+
+
+.book-container {
+  position: relative;
+  left: 800px;
+  width: auto;
+}
+
+.content {
+    text-align: center;
+    color: black;
+}
+
+#title {
+  top: 150px;
+  left: 350px;
+}
+
+#text {
+  top: 225px;
+  left: 350px;
+}
+
+.chatbox {
+  margin-left: 75px;
+}
+
+.text-container {
+  position: absolute;
+  height: 600px;
+  width: 300px;
+  top: 150px;
+  left: 275px;
+
+}
+
+
+.chat-form-container {
+  position: relative;
+  left: 140px;
 }
