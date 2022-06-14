@@ -1,39 +1,50 @@
+// creating the socket object for this client
 const socket = io();
+// just retrieving the elements we need (these specifically are only in the game-lobby)
 const messageContainer = document.getElementById('chat-container');
 const messageForm = document.getElementById('chat-form');
 const messageInput = document.getElementById('msg');
 
+// this determines if the client is in the game lobby and if so runs the code below
 if (messageForm != null) {
-  const name = prompt("What is your name?");
-  appendMessage("You joined");
-  const roomName = window.location.pathname.replace("/", "");
-  socket.emit("new-user", roomName, name);
+  // just stores the nickname that the user will use during their time on the page, this gets referenced while sending socket events
+  const name = prompt('What is your name?');
+  appendMessage('You joined');
+  // this will store the name of the room, this will get referenced by socket events
+  const roomName = window.location.pathname.replace('/', '');
+  // lets the server know that there's a new user, there is a listener in server.js that will pick this up and use the information it sends
+  socket.emit('new-user', roomName, name);
 
-  messageForm.addEventListener("submit", (e) => {
+  // handles the function of the chat box form
+  messageForm.addEventListener('submit', (e) => {
     e.preventDefault();
     const message = messageInput.value;
-
     appendMessage(`You: ${message}`);
-
-    socket.emit("send-chat-message", roomName, message);
-    messageInput.value = "";
+    // sends your chat message up to the server, where there's a listener that will decide what to do with it (most likely send it to the other people in your room)
+    socket.emit('send-chat-message', roomName, message);
+    messageInput.value = '';
   });
 }
 
-socket.on("chat-message", (data) => {
+// listens for a chat-message from the server (which originally came from another client) and displays it
+socket.on('chat-message', (data) => {
   appendMessage(`${data.name}: ${data.message}`);
 });
 
-socket.on("user-connected", (name) => {
+// listens for when the server sends a message that a user connected and announces it to the previously connected clients
+socket.on('user-connected', (name) => {
   appendMessage(`${name} connected`);
 });
 
-socket.on("user-disconnected", (name) => {
+// listens for when the server sends a message that a user disconnected and announces it to the clients that remain in the room
+socket.on('user-disconnected', (name) => {
   appendMessage(`${name} disconnected`);
 });
 
+// handles how the messages are displayed to each user. We'll have to make a similar function to handle the outputted game text,
+// since it will be displayed in another element
 function appendMessage(message) {
-  const messageElement = document.createElement("li");
+  const messageElement = document.createElement('li');
   messageElement.innerText = message;
   messageContainer.append(messageElement);
 }
