@@ -2,22 +2,20 @@
   <!---------------Input chat box--------------->
   <div class="container row">
     <div
-      class="card chatbox text-center text-dark mainFont w-50 col top mh-100 position-absolute top-0 start-0 formatHelp"
+      class="card chatbox text-center text-dark mainFont w-50 col top mh-100 position-absolute top-0 start-0 formatHelp overflow-auto"
       style="width: 18rem;">
       <div class="card-body chat-container mh-100 formatHelp">
         <h2 class="text-center mh-100 formatHelp">Spin Your Tale!</h2>
         <h5 class="card-title chat-header mh-100 formatHelp">Room Name</h5>
         <p class="formatHelp mh-100">Online</p>
         <a href="/home" class="btn mainFont mh-100 formatHelp" id="leave-btn">Leave Room</a>
-        <ul class="card-text chat-main chat-messages overflow-auto mainFont mh-100 formatHelp" id ="chat-container">MESSAGES APPEAR HERE, chat
-          created
-          with js.<ul>
+        <ul class="card-text chat-main chat-messages mainFont mh-100 formatHelp" id ="chat-container">MESSAGES APPEAR HERE!<ul>
       </div>
       <div class="chat-form-container ms-5 mh-100 formatHelp" style="width: 45%">
       
         <form class="formatHelp mh-100" id="chat-form">
           <input id="msg" type="text" placeholder="Type a Message" required autocomplete="off" />
-          <a href="#" class="btn sml btn-secondary mh-100" id="submitBtn">Submit</a>
+          <a href="#" class="btn sml btn-secondary mh-100" id="submitBtn">Hit Enter to Send</a>
         </form>
       </div>
     </div>
