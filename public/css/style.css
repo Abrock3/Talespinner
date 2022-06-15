@@ -133,7 +133,7 @@ h2 {
 
 
 .chat-form-container {
-  position: relative;
+  position: absolute;
   left: 140px;
 }
 
