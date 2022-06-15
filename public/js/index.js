@@ -53,14 +53,3 @@ function appendMessage(message) {
   messageElement.innerText = message;
   messageContainer.append(messageElement);
 }
-
- <section id = "game-status-display">
-    {{!-- lobby name will get inserted with js --}}
-    <h3 id ="library-name" ></h3>
-    {{!-- player names will be inserted with js --}}
-    <ul id = "player-list">
-    </ul>
-{{!-- game status will appear here --}}
-    <p id="game-status-announcement"></p>
-    <button id = "start-game-button" class = "hidden">Start Game</button>
-  </section>
