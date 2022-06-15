@@ -25,14 +25,14 @@ app.get('/', (req, res) => {
   res.render('landpage', { layout: 'main' });
 });
 // works similarly to the above route
-app.get('/home', (req, res) => {
-  res.render('home', { layout: 'main' });
+app.get('/lobby', (req, res) => {
+  res.render('lobby', { layout: 'main' });
 });
-// /room is not a page, it's a route for the "home" page to send info when a user is attempting to create a room
+// /room is not a page, it's a route for the "lobby" page to send info when a user is attempting to create a room
 app.post('/room', (req, res) => {
-  // If the user types a room name that already exists, they'll be redirected back to /home to try again
+  // If the user types a room name that already exists, they'll be redirected back to /lobby to try again
   if (rooms[req.body.room] != null) {
-    return res.redirect('/home');
+    return res.redirect('/lobby');
   }
 
   // creates a room key inside of the rooms object; the key's name is identical to the user's input. it also adds a .users object to be added to later
@@ -44,9 +44,9 @@ app.post('/room', (req, res) => {
 });
 
 app.get('/:room', (req, res) => {
-  // if the user attempts to manually type a URL that leads to a room that doesn't exist within the room object, they are redirected to /home
+  // if the user attempts to manually type a URL that leads to a room that doesn't exist within the room object, they are redirected to /lobby
   if (rooms[req.params.room] == null) {
-    return res.redirect('/home');
+    return res.redirect('/lobby');
   }
   // if the room exists, then the user is supplied the HTML from game-lobby.handlebars
   res.render('game-lobby', { layout: 'main' });
