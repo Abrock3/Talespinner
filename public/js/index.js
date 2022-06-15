@@ -4,6 +4,12 @@ const socket = io();
 const messageContainer = document.getElementById('chat-container');
 const messageForm = document.getElementById('chat-form');
 const messageInput = document.getElementById('msg');
+const gameStatusEl =document.getElementById('game-status-display');
+const libraryNameEl = document.getElementById('library-name');
+const playerListEl = document.getElementById('player-list');
+const gameStatusAnnouncmentEl = document.getElementById('game-status-announcement');
+const startGameButtonEl = document.getElementById('start-game-button');
+
 // this determines if the client is in the game lobby and if so runs the code below
 if (messageForm != null) {
   // just stores the nickname that the user will use during their time on the page, this gets referenced while sending socket events
@@ -47,3 +53,14 @@ function appendMessage(message) {
   messageElement.innerText = message;
   messageContainer.append(messageElement);
 }
+
+ <section id = "game-status-display">
+    {{!-- lobby name will get inserted with js --}}
+    <h3 id ="library-name" ></h3>
+    {{!-- player names will be inserted with js --}}
+    <ul id = "player-list">
+    </ul>
+{{!-- game status will appear here --}}
+    <p id="game-status-announcement"></p>
+    <button id = "start-game-button" class = "hidden">Start Game</button>
+  </section>
