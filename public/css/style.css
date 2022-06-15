@@ -1,8 +1,6 @@
 .card {
   text-align: center;
   position: absolute;
-  -ms-transform: translateY(+50%);
-  transform: translateY(+50%);
   display: block;
   margin: auto;
 }
@@ -133,10 +131,15 @@ h2 {
 
 
 .chat-form-container {
-  position: relative;
+  position: absolute;
   left: 140px;
+  margin-bottom: 200px;
 }
 
 .lobby-title {
   border-radius:3%;
+}
+
+.row {
+  margin-top: 200px;
 }
