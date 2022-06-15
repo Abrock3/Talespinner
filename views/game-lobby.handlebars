@@ -1,50 +1,56 @@
-<body class="jumbotron container formatHelp" id="jumbo-main">
-  <!---------------Input chat box--------------->
-  <div class="containter-fluid no-padding">
-    <div class="row">
-    <div
-      class="card chatbox text-center text-dark mainFont w-50 col top mh-100 position-absolute top-0 start-0 formatHelp overflow-auto"
-      style="width: 18rem;">
-      <div class="card-body chat-container mh-100 formatHelp">
-        <h2 class="text-center mh-100 formatHelp">Spin Your Tale!</h2>
-        <h5 class="card-title chat-header mh-100 formatHelp">Room Name</h5>
-        <p class="formatHelp mh-100">Welcome</p>
-        <a href="/home" class="btn mainFont mh-100 formatHelp" id="leave-btn">Leave Room</a>
-        <ul class="card-text chat-main chat-messages mainFont mh-100 formatHelp" id ="chat-container">MESSAGES APPEAR HERE!<ul>
-      </div>
-      <div class="chat-form-container ms-5 mh-100 formatHelp" style="width: 45%">
-      
-        <form class="formatHelp mh-100" id="chat-form">
-          <input id="msg" type="text" placeholder="Type a Message" required autocomplete="off" />
-          <button href="#" class="btn sml btn-secondary mh-100" id="submitBtn">Submit</button>
 
-        </form>
+<body class="jumbotron containter formatHelp" id="jumbo-main">
+    <!---------------Input chat box--------------->
+    <div class="containter-fluid no-padding">
+      <div class="row">
+      <div
+        class="card chatbox text-center text-dark mainFont col-sm-4 position-absolute top-4 start-0 formatHelp overflow-auto">
+        <div class="card-body chat-container formatHelp">
+          <h2 class="text-center formatHelp">Spin Your Tale!</h2>
+          <h5 class="card-title chat-header formatHelp">Room Name</h5>
+          <p class="formatHelp ">Welcome</p>
+          <a href="/home" class="btn mainFont formatHelp" id="leave-btn">Leave Room</a>
+          <ul class="card-text containter-fluid chat-main chat-messages mainFont formatHelp" id ="chat-container chat-box-height ">MESSAGES APPEAR HERE!<ul>
+        </div>
+        <!-- <div class="chat-form-container ms-5 formatHelp" style="width: 45%"> -->
+        
+          <form class="formatHelp containter-fluid" id="chat-form">
+            <input class="containter-fluid" id="msg" type="text" placeholder="Type a Message" required autocomplete="off" />
+            <button href="#" class="btn sml btn-secondary" id="submitBtn">Submit</button>
+  
+          </form>
+        <!-- </div> -->
+      </div>
+      <!---------------Book--------------->
+      <div class="card  col-sm-3 p-0  container-fluid book-container bg-transparent formatHelp">
+        <div class="card-body text-center content leFont container-fluid formatHelp overflow-auto bg-transparent m-0" id="text">
+            The pain itself is the love of the pain, the main ecological
+            problems, but I give this kind of time to fall down, so that some
+            great pain and pain. In order that for the most part, any one of us
+            will come to the exercise of any kind of employment except to take
+            advantage of the objectives from it..
+        </div>
+      </div>
+
+      <!-- <div class="book-container leFont formatHelp"> -->
+        <!-- <div class="text-container containter-fluid formatHelp"> -->
+          <!-- <h2 class="container-fluid content text-container formatHelp" id="title">Library Title</h2>
+          <div class="content container-fluid formatHelp" id="text">The pain itself is the love of the pain, the main ecological
+            problems, but I give this kind of time to fall down, so that some
+            great pain and pain. In order that for the most part, any one of us
+            will come to the exercise of any kind of employment except to take
+            advantage of the objectives from it.</div> -->
+        <!-- </div> -->
+        <!-- Continued Container so text appears on both sides  -->
+        <!-- <div class="text-container" id="continue-container">
+          <div class="content" id="continued">generated content</div>
+        </div> -->
+      <!-- </div> -->
       </div>
     </div>
-    <!---------------Book--------------->
-    <div class="book-container leFont">
-      <div class="text-container">
-        <h2 class=" content" id="title">Library Title</h2>
-        <div class="content" id="text">The pain itself is the love of the pain, the main ecological
-          problems, but I give this kind of time to fall down, so that some
-          great pain and pain. In order that for the most part, any one of us
-          will come to the exercise of any kind of employment except to take
-          advantage of the objectives from it.</div>
-      </div>
-      <!-- Continued Container so text appears on both sides  -->
-      <!-- <div class="text-container" id="continue-container">
-        <div class="content" id="continued">generated content</div>
-      </div> -->
-    </div>
-    </div>
-  </div>
 
-
-
-
-
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/qs/6.9.2/qs.min.js"
-    integrity="sha256-TDxXjkAUay70ae/QJBEpGKkpVslXaHHayklIVglFRT4=" crossorigin="anonymous"></script>
-  <script src="/socket.io/socket.io.js"></script>
-    <script src="/js/index.js"></script>
-</body>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qs/6.9.2/qs.min.js"
+      integrity="sha256-TDxXjkAUay70ae/QJBEpGKkpVslXaHHayklIVglFRT4=" crossorigin="anonymous"></script>
+    <script src="/socket.io/socket.io.js"></script>
+      <script src="/js/index.js"></script>
+  </body>

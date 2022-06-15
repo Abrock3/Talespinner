@@ -1,3 +1,23 @@
+h2 {
+  text-align: center;
+}
+
+nav {
+  margin: auto;
+}
+
+ul {
+  list-style: none;
+}
+
+#users {
+  display: inline;
+}
+
+li {
+  margin-bottom: 10px;
+}
+
 .card {
   text-align: center;
   position: absolute;
@@ -9,24 +29,15 @@
   margin-bottom: 15px;
 }
 
-nav {
-  margin: auto;
+.lobby-title {
+  border-radius: 3%;
 }
 
-ul {
-  list-style: none;
+.row {
+  margin-top: 200px;
 }
 
-
-
-#users {
-  display: inline;
-}
-
-/* li {
-  margin-bottom: 10px;
-} */
-
+/*  ---------- Jumbotrons  ---------- */
 .jumbotron {
   color: white;
   background-position: center;
@@ -39,71 +50,89 @@ ul {
   background-image: url("../images/kittyoption.jpeg");
 }
 
-
 #jumbo-lobby {
   background-image: url("../images/chairbooks.jpeg");
 }
- 
 
-#jumbo-main {
-  background-image: url("../images/librarydeskbook.jpg");
+/* #jumbo-main {
+  background-image: url("../images/desk_book.jpg");
+} */
+
+/* ---------- Fonts ---------- */
+.leFont {
+  font-family: "Quintessential", cursive;
 }
 
-
-.leFont{
-font-family: 'Quintessential', cursive;
-}
-
-.mainFont{
+.mainFont {
   font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
 
-/* .formatHelp{
-  border:3px solid red;
-} */
-
+/* ---------- Buttons ---------- */
 .btn {
   margin: 5px 25px;
-}
-
-form {
-  margin-right: 15px;
 }
 
 #searchBtn {
   margin: auto;
 }
 
-h2 {
-  text-align: center;
+#searchBtn {
+  margin-top: 10px !important;
 }
+
+/* form {
+  margin-right: 15px;
+} */
 
 .title-holder {
   background-color: gray;
 }
 
-#history, #results {
+#history,
+#results {
   top: 32px;
-}
-
-#searchBtn {
-  margin-top: 10px!important;
 }
 
 .container {
   position: relative;
 }
 
+.content {
+  text-align: center;
+  color: black;
+}
+
+/*  ---------- Chat Box ---------- */
+.chatbox {
+  /* margin-left: 75px; */
+  height: 90%;
+}
+
+.chat-form-container {
+  position: absolute;
+  /* left: 140px;
+  margin-bottom: 100px;
+  width: 100%; */
+}
+
+#chat-box-height {
+  height: 475px;
+}
+
+/*  ---------- Book  ---------- */
+.text-container {
+  position: absolute;
+  height: 485px;
+  width: 100px;
+  top: 250px;
+  left: 275px;
+}
 
 .book-container {
   position: relative;
-  left: 800px;
-  width: auto;
-}
-
-.content {
-    text-align: center;
-    color: black;
+  left: 425px;
+  width: 100px;
+  top: 95px;
 }
 
 #title {
@@ -113,33 +142,92 @@ h2 {
 
 #text {
   top: 225px;
-  left: 350px;
-}
-
-.chatbox {
-  margin-left: 75px;
-}
-
-.text-container {
-  position: absolute;
-  height: 600px;
+  left: 450px;
   width: 300px;
-  top: 150px;
-  left: 275px;
-
+  height: 500px;
 }
 
 
-.chat-form-container {
-  position: absolute;
-  left: 140px;
-  margin-bottom: 200px;
+
+/* ---------- Media Query ---------- */
+
+@media screen and (min-width: 360px) {
+  .jumbotron {
+    color: white;
+    /* background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: 100vh; */
+  }
+  #jumbo-main {
+    background-image: url("../images/largebook.jpeg");
+  }
+  .book-container {
+    position: relative;
+    /* left: 425px; */
+    width: 100px;
+    /* top: 150px; */
+  }
+  #chat-box-height {
+    height: 105px;
+  }
+
 }
 
-.lobby-title {
-  border-radius:3%;
+@media screen and (min-width: 576px) {
+  .jumbotron {
+    color: white;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: 100vh;
+  }
+  #jumbo-main {
+    background-image: url("../images/largebook.jpeg");
+  }
 }
 
-.row {
-  margin-top: 200px;
+@media screen and (min-width: 768px) {
+  .jumbotron {
+    color: white;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: 100vh;
+  }
+  #jumbo-main {
+    background-image: url("../images/desk_book.jpg");
+  }
 }
+
+@media screen and (min-width: 992px) {
+  .jumbotron {
+    color: white;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: 100vh;
+  }
+  #jumbo-main {
+    background-image: url("../images/desk_book.jpg");
+  }
+}
+
+@media screen and (min-width: 1200px) {
+  #jumbo-main {
+    background-image: url("../images/desk_book.jpg");
+  }
+}
+
+@media screen and (min-width: 1400px) {
+  #jumbo-main {
+    background-image: url("../images/desk_book.jpg");
+  }
+}
+
+
+
+/* ---------- Format help for creating the layout ---------- */
+/* .formatHelp {
+  border: 3px solid red;
+} */
