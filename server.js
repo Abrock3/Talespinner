@@ -18,9 +18,29 @@ app.use(express.urlencoded({ extended: true }));
 
 // rooms is the central object that will store all game information, including room names, the users inside those rooms,
 // and any game info related to those rooms
-const rooms = {};
+const rooms = {
+  testRoom: {
+    cumulativeStory: `<h3> Corey: Blah Blah Blah.<h3>
+    <h3>Erica: Nah Nah Nah.</h3>
+    <h3>Laura: Dah Dah Dah</h3>`,
+    users: {
+      ebRk5MdnEo72Nd9gAAAX: 'Laura',
+      '4n0nhhd0JCzp1NdjAAAN': 'Erica',
+      L9UJwgk8zAwxPemQAAAR: 'Corey',
+    },
+    turnsLeft: 17,
+    gameStarted: 0,
+    nextPrompt: 'Gatling Gun',
+    playerTurn: 2,
+    turnOrder: [
+      { socketId: 'L9UJwgk8zAwxPemQAAAR', name: 'Corey' },
+      { socketId: '4n0nhhd0JCzp1NdjAAAN', name: 'Erica' },
+      { socketId: 'ebRk5MdnEo72Nd9gAAAX', name: 'Laura' },
+    ],
+  },
+};
 
-// res.render nests landpage.handlebars inside the main.handlebars layout and sends that to the user; 
+// res.render nests landpage.handlebars inside the main.handlebars layout and sends that to the user;
 app.get('/', (req, res) => {
   res.render('landpage', { layout: 'main' });
 });
@@ -48,8 +68,8 @@ app.get('/:room', (req, res) => {
   if (rooms[req.params.room] == null) {
     return res.redirect('/lobby');
   }
-  // if the room exists, then the user is supplied the HTML from game-lobby.handlebars
-  res.render('game-lobby', { layout: 'main' });
+  // if the room exists, then the user is supplied the HTML from room.handlebars
+  res.render('room', { layout: 'main' });
 });
 
 // the final step of server initialization
@@ -63,9 +83,9 @@ io.on('connection', (socket) => {
   console.log(socket.rooms);
   // logs when a user connects
   console.log('connected');
-// this is a socket event listener for the custom event "new-user", which is emitted by index.js when a user connects to an existent game lobby
-// room and name are both custom pieces of data that were sent by the index.js while emitting the new-user event
-// the "socket" object represents a single user, not every user (as io does)
+  // this is a socket event listener for the custom event "new-user", which is emitted by index.js when a user connects to an existent game lobby
+  // room and name are both custom pieces of data that were sent by the index.js while emitting the new-user event
+  // the "socket" object represents a single user, not every user (as io does)
   socket.on('new-user', (room, name) => {
     // the socket method .join() will ask socket.io to add that specific socket to the room
     socket.join(room);
@@ -84,7 +104,7 @@ io.on('connection', (socket) => {
     // index.js will handle how to deal with that information
     socket.to(room).emit('user-connected', name);
   });
-  // another listener for a custom socket event, this one triggers when the "send-chat-message" event gets sent by a client. 
+  // another listener for a custom socket event, this one triggers when the "send-chat-message" event gets sent by a client.
   // the room the user is in and their message will also be passed into this listener, which can then be used in the callback
   socket.on('send-chat-message', (room, message) => {
     // sends a custom socket event "chat-message" to all members of the room that the user was in, sending the message and name as well
@@ -92,6 +112,18 @@ io.on('connection', (socket) => {
     socket.to(room).emit('chat-message', {
       message: message,
       name: rooms[room].users[socket.id],
+    });
+  });
+  socket.on('request-status-update', (room) => {
+    console.log('inside the request-status-update event');
+    io.in(room).emit('game-status-update', {
+      cumulativeStory: rooms[room].cumulativeStory,
+      turnOrder: rooms[room].turnOrder,
+      gameStarted: rooms[room].gameStarted,
+      nextPrompt: rooms[room].nextPrompt,
+      playerTurn: rooms[room].playerTurn,
+      users: rooms[room].users,
+      turnsLeft: rooms[room].turnsLeft,
     });
   });
   // this listener listens for when a user disconnects from a room
@@ -104,27 +136,7 @@ io.on('connection', (socket) => {
       console.log(rooms[room].users);
       // if the room has 0 clients left connected to it, it will set a timeout that will delete the room from our rooms object after 30 seconds.
       if (Object.keys(rooms[room].users).length === 0) {
-        function roomKillTimer() {
-          console.log(
-            `The room "${room}" will be deleted after 30 seconds with no connection.`
-          );
-          let seconds = 0;
-          let roomKillInterval = setInterval(() => {
-            seconds++;
-            if (Object.keys(rooms[room].users).length > 0) {
-              console.log(
-                `The room "${room}" will not be deleted, as a user rejoined.`
-              );
-              clearInterval(roomKillInterval);
-            }
-            if (seconds >= 29) {
-              delete rooms[room];
-              console.log(`The room "${room}" has been deleted.`);
-              clearInterval(roomKillInterval);
-            }
-          }, 1000);
-        }
-        roomKillTimer();
+        roomKillTimer(room);
       }
     });
   });
@@ -135,4 +147,24 @@ function getUserRooms(socket) {
     if (room.users[socket.id] != null) names.push(name);
     return names;
   }, []);
+}
+function roomKillTimer(room) {
+  console.log(
+    `The room "${room}" will be deleted after 30 seconds with no connection.`
+  );
+  let seconds = 0;
+  let roomKillInterval = setInterval(() => {
+    seconds++;
+    if (Object.keys(rooms[room].users).length > 0) {
+      console.log(
+        `The room "${room}" will not be deleted, as a user rejoined.`
+      );
+      clearInterval(roomKillInterval);
+    }
+    if (seconds >= 29) {
+      delete rooms[room];
+      console.log(`The room "${room}" has been deleted.`);
+      clearInterval(roomKillInterval);
+    }
+  }, 1000);
 }

@@ -1,7 +1,18 @@
 
-<body class="jumbotron containter formatHelp" id="jumbo-main">
+<body class="jumbotron container formatHelp" id="jumbo-main">
+  {{!-- game-status-display box --}}
+  <section id = "game-status-display">
+    {{!-- lobby name will get inserted with js --}}
+    <h3 id ="library-name" ></h3>
+    {{!-- player names will be inserted with js --}}
+    <ul id = "player-list">
+    </ul>
+{{!-- game status will appear here --}}
+    <p id="game-status-announcement"></p>
+    <button id = "start-game-button" class = "hidden">Start Game</button>
+  </section>
     <!---------------Input chat box--------------->
-    <div class="containter-fluid no-padding">
+    <div class="container-fluid no-padding">
       <div class="row">
       <div
         class="card chatbox text-center text-dark mainFont col-sm-4 position-absolute top-4 start-0 formatHelp overflow-auto">
@@ -10,20 +21,20 @@
           <h5 class="card-title chat-header formatHelp">Room Name</h5>
           <p class="formatHelp ">Welcome</p>
           <a href="/home" class="btn mainFont formatHelp" id="leave-btn">Leave Room</a>
-          <ul class="card-text containter-fluid chat-main chat-messages mainFont formatHelp" id ="chat-container chat-box-height ">MESSAGES APPEAR HERE!<ul>
+          <ul class="card-text container-fluid chat-main chat-messages mainFont formatHelp chat-box-height" id ="chat-container">MESSAGES APPEAR HERE!<ul>
         </div>
         <!-- <div class="chat-form-container ms-5 formatHelp" style="width: 45%"> -->
         
-          <form class="formatHelp containter-fluid" id="chat-form">
-            <input class="containter-fluid" id="msg" type="text" placeholder="Type a Message" required autocomplete="off" />
-            <button href="#" class="btn sml btn-secondary" id="submitBtn">Submit</button>
-  
+          <form class="formatHelp container-fluid" id="chat-form">
+            <input class="container-fluid" id="msg" type="text" placeholder="Type a Message" required autocomplete="off" />
+            <button class="btn sml btn-secondary" id="submitBtn">Submit</button>
           </form>
         <!-- </div> -->
       </div>
       <!---------------Book--------------->
-      <div class="card  col-sm-3 p-0  container-fluid book-container bg-transparent formatHelp">
-        <div class="text-center content leFont container-fluid formatHelp  bg-transparent m-0" id="text">
+
+      <div class="col-sm-3 p-0 book-container ">
+        <div class="card-body text-center content leFont container-fluid formatHelp overflow-auto bg-transparent m-0 border-0" id="story-text">
             The pain itself is the love of the pain, the main ecological
             problems, but I give this kind of time to fall down, so that some
             great pain and pain. In order that for the most part, any one of us
@@ -33,7 +44,7 @@
       </div>
 
       <!-- <div class="book-container leFont formatHelp"> -->
-        <!-- <div class="text-container containter-fluid formatHelp"> -->
+        <!-- <div class="text-container container-fluid formatHelp"> -->
           <!-- <h2 class="container-fluid content text-container formatHelp" id="title">Library Title</h2>
           <div class="content container-fluid formatHelp" id="text">The pain itself is the love of the pain, the main ecological
             problems, but I give this kind of time to fall down, so that some
