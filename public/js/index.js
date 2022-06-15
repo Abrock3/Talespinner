@@ -4,7 +4,6 @@ const socket = io();
 const messageContainer = document.getElementById('chat-container');
 const messageForm = document.getElementById('chat-form');
 const messageInput = document.getElementById('msg');
-
 // this determines if the client is in the game lobby and if so runs the code below
 if (messageForm != null) {
   // just stores the nickname that the user will use during their time on the page, this gets referenced while sending socket events
