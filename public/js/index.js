@@ -1,47 +1,60 @@
 // creating the socket object for this client
 const socket = io();
-// just retrieving the elements we need (these specifically are only in the game-lobby)
-const messageContainer = document.getElementById('chat-container');
-const messageForm = document.getElementById('chat-form');
-const messageInput = document.getElementById('msg');
+const messageContainerEl = document.getElementById('chat-container');
+const messageFormEl = document.getElementById('chat-form');
+const messageInputEl = document.getElementById('msg');
 const libraryNameEl = document.getElementById('library-name');
 const playerListEl = document.getElementById('player-list');
-const gameStatusAnnouncementEl = document.getElementById(
-  'game-status-announcement'
-);
+
 const startGameButtonEl = document.getElementById('start-game-button');
-const storyTextEl = document.getElementById('story-text');
+const storyTextEl = document.getElementById('user-text');
+const submitStoryFormEl = document.getElementById('submit-story-form');
+const storyInputEl = document.getElementById('story-text-input');
+const promptInputEl = document.getElementById('prompt-input');
+const promptDisplayEl = document.getElementById('prompt-text');
+const genreSpanEl = document.getElementById('genre-span');
+const settingSpanEl = document.getElementById('setting-span');
+const objectSpanEl = document.getElementById('object-span');
+const characterSpanEl = document.getElementById('character-span');
+const hostPlayerSettingsFormEl = document.getElementById(
+  'host-player-settings-form'
+);
+const gameStatusInfoParaEl = document.getElementById('game-status-info');
+const randomizePromptsBtnEl = document.getElementById('randomize-prompts-btn');
 
 // this determines if the client is in the game lobby and if so runs the code below
-if (messageForm != null) {
+if (messageFormEl != null) {
   // just stores the nickname that the user will use during their time on the page, this gets referenced while sending socket events
   const name = prompt('What is your name?');
   appendMessage('You joined');
   // this will store the name of the room, this will get referenced by socket events
   const roomName = window.location.pathname.replace('/', '');
+  libraryNameEl.innerHTML = roomName;
+
   // lets the server know that there's a new user, there is a listener in server.js that will pick this up and use the information it sends
   socket.emit('new-user', roomName, name);
   socket.emit('request-status-update', roomName);
   // handles the function of the chat box form
-  messageForm.addEventListener('submit', (e) => {
+  messageFormEl.addEventListener('submit', (e) => {
     e.preventDefault();
-    const message = messageInput.value;
+    const message = messageInputEl.value;
     appendMessage(`You: ${message}`);
     // sends your chat message up to the server, where there's a listener that will decide what to do with it (most likely send it to the other people in your room)
     socket.emit('send-chat-message', roomName, message);
+    messageInputEl.value = '';
+  });
 
-    messageInput.value = '';
+  submitStoryFormEl.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const story = storyInputEl.value;
+    const newPrompt = promptInputEl.value;
+    // sends your chat message up to the server, where there's a listener that will decide what to do with it (most likely send it to the other people in your room)
+    socket.emit('send-new-story-snippet', roomName, story, newPrompt);
+    storyInputEl.value = '';
+    promptInputEl.value = '';
   });
-  socket.on('game-status-update', (data) => {
-    gameStatusUpdate(socket, data);
-  });
-  function gameStatusUpdate(socket, data) {
-    console.log(data);
-    libraryNameEl.innerHTML = '';
+  function updatePlayerList(data) {
     playerListEl.innerHTML = '';
-    gameStatusAnnouncementEl.innerHTML = '';
-    storyTextEl.innerHTML = '';
-    libraryNameEl.innerHTML = roomName;
     if (data.gameStarted === 0) {
       Object.values(data.users).forEach((e, index) => {
         const playerEl = document.createElement('li');
@@ -61,22 +74,83 @@ if (messageForm != null) {
         playerListEl.append(playerEl);
       }
     }
-    if (data.gameStarted) {
-      gameStatusAnnouncementEl.innerHTML = `It is ${
-        socket.id === data.turnOrder[data.playerTurn].socketId
-          ? 'your'
-          : data.turnOrder[data.playerTurn].name + "'s"
-      } turn. There are ${
-        data.turnsLeft
-      } turns left in the game. The next statement must include "${
+  }
+
+  function updateCumulativeStory(data) {
+    storyTextEl.innerHTML = data.cumulativeStory;
+  }
+
+  function updateFormStatus(socket, data) {
+    console.log(data);
+    if (data.hostPlayer.socketId === socket.id && data.gameStarted === 0) {
+      hostPlayerSettingsFormEl.classList.remove('hidden');
+      submitStoryFormEl.classList.add('hidden');
+      gameStatusInfoParaEl.classList.add('hidden');
+    } else if (
+      data.hostPlayer.socketId !== socket.id &&
+      data.gameStarted === 0
+    ) {
+      hostPlayerSettingsFormEl.classList.add('hidden');
+      submitStoryFormEl.classList.add('hidden');
+      gameStatusInfoParaEl.classList.remove('hidden');
+      gameStatusInfoParaEl.innerText =
+        'Waiting on the host to start the game...';
+    } else if (
+      data.turnOrder[data.playerTurn].socketId === socket.id &&
+      data.gameStarted === 1
+    ) {
+      hostPlayerSettingsFormEl.classList.add('hidden');
+      submitStoryFormEl.classList.remove('hidden');
+      gameStatusInfoParaEl.classList.add('hidden');
+      promptDisplayEl.innerText = data.nextPrompt;
+    } else if (
+      data.turnOrder[data.playerTurn].socketId !== socket.id &&
+      data.gameStarted === 1
+    ) {
+      hostPlayerSettingsFormEl.classList.add('hidden');
+      submitStoryFormEl.classList.add('hidden');
+      gameStatusInfoParaEl.classList.remove('hidden');
+      gameStatusInfoParaEl.innerText = `Currently it's ${
+        data.turnOrder[data.playerTurn].name
+      }'s turn; they're writing a new line with this prompt: ${
         data.nextPrompt
-      }."`;
-      storyTextEl.innerHTML = data.cumulativeStory;
-    } else {
-      gameStatusAnnouncementEl.innerHTML = `Game status: the host has not started the game yet.`;
+      }`;
     }
   }
+
+  function fullGameStatusUpdate(socket, data) {
+    updatePlayerList(data);
+    updateCumulativeStory(data);
+    updateFormStatus(socket, data);
+  }
+
+  socket.on('game-status-update', (data) => {
+    fullGameStatusUpdate(socket, data);
+  });
+
+  window.addEventListener('focus', function () {
+    socket.emit('update-my-game-info', roomName);
+  });
+
+  randomizePromptsBtnEl.addEventListener('click', () => {
+    genreSpanEl.innerText = genres[Math.floor(Math.random() * genres.length)];
+    settingSpanEl.innerText =
+      settings[Math.floor(Math.random() * settings.length)];
+    objectSpanEl.innerText =
+      objects[Math.floor(Math.random() * objects.length)];
+    characterSpanEl.innerText =
+      characters[Math.floor(Math.random() * characters.length)];
+  });
+  hostPlayerSettingsFormEl.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const newPrompt = `Genre: ${genreSpanEl.innerText}
+    Setting: ${settingSpanEl.innerText}
+   Object: ${objectSpanEl.innerText}
+  Character: ${characterSpanEl.innerText}`;
+    socket.emit('start-game', roomName, newPrompt);
+  });
 }
+
 // listens for a chat-message from the server (which originally came from another client) and displays it
 socket.on('chat-message', (data) => {
   appendMessage(`${data.name}: ${data.message}`);
@@ -97,5 +171,5 @@ socket.on('user-disconnected', (name) => {
 function appendMessage(message) {
   const messageElement = document.createElement('li');
   messageElement.innerText = message;
-  messageContainer.append(messageElement);
+  messageContainerEl.append(messageElement);
 }
