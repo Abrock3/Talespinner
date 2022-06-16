@@ -133,56 +133,66 @@ io.on('connection', (socket) => {
   // room and name are both custom pieces of data that were sent by the index.js while emitting the new-user event
   // the "socket" object represents a single user, not every user (as io does)
   socket.on('new-user', (room, name) => {
-    // the socket method .join() will ask socket.io to add that specific socket to the room
-    socket.join(room);
-    // adds the user's socket ID as a key to the users object (for that specific room), and then sets their chosen name as the value paired with that key
-    rooms[room].users[socket.id] = name;
-    if (Object.keys(rooms[room].hostPlayer).length === 0) {
-      rooms[room].hostPlayer = { socketId: socket.id, name: name };
+    if (rooms[room]) {
+      // the socket method .join() will ask socket.io to add that specific socket to the room
+      socket.join(room);
+      // adds the user's socket ID as a key to the users object (for that specific room), and then sets their chosen name as the value paired with that key
+      rooms[room].users[socket.id] = name;
+      if (Object.keys(rooms[room].hostPlayer).length === 0) {
+        rooms[room].hostPlayer = { socketId: socket.id, name: name };
+      }
+      console.log('rooms object');
+      console.log(rooms);
+      // the socket.io .to() method, when combined with .emit(), will send a custom message to all users that are connected to a specific room
+      // this message specifically will let all people in the room that's being joined know that there is a new user, and what their name is.
+      // index.js will handle how to deal with that information
+      socket.to(room).emit('user-connected', name);
+      updateAllPlayersInRoom(room);
     }
-    console.log('rooms object');
-    console.log(rooms);
-    // the socket.io .to() method, when combined with .emit(), will send a custom message to all users that are connected to a specific room
-    // this message specifically will let all people in the room that's being joined know that there is a new user, and what their name is.
-    // index.js will handle how to deal with that information
-    socket.to(room).emit('user-connected', name);
-    updateAllPlayersInRoom(room);
   });
   // another listener for a custom socket event, this one triggers when the "send-chat-message" event gets sent by a client.
   // the room the user is in and their message will also be passed into this listener, which can then be used in the callback
   socket.on('send-chat-message', (room, message) => {
-    // sends a custom socket event "chat-message" to all members of the room that the user was in, sending the message and name as well
-    // this event is paired with a listener in index.js that will deal with how to use that information
-    socket.to(room).emit('chat-message', {
-      message: message,
-      name: rooms[room].users[socket.id],
-    });
+    if (rooms[room]) {
+      // sends a custom socket event "chat-message" to all members of the room that the user was in, sending the message and name as well
+      // this event is paired with a listener in index.js that will deal with how to use that information
+      socket.to(room).emit('chat-message', {
+        message: message,
+        name: rooms[room].users[socket.id],
+      });
+    }
   });
   socket.on('start-game', (room, newPrompt) => {
-    rooms[room].gameStarted = 1;
-    let turnOrderArray = [];
-    for (const user in rooms[room].users) {
-      turnOrderArray.push({ socketId: user, name: rooms[room].users[user] });
+    if (rooms[room]) {
+      rooms[room].gameStarted = 1;
+      let turnOrderArray = [];
+      for (const user in rooms[room].users) {
+        turnOrderArray.push({ socketId: user, name: rooms[room].users[user] });
+      }
+      rooms[room].turnOrder = turnOrderArray;
+      rooms[room].playerTurn = Math.floor(
+        Math.random() * turnOrderArray.length
+      );
+      rooms[room].turnsLeft = 20;
+      rooms[room].nextPrompt = newPrompt;
+      updateAllPlayersInRoom(room);
     }
-    rooms[room].turnOrder = turnOrderArray;
-    rooms[room].playerTurn = Math.floor(Math.random() * turnOrderArray.length);
-    rooms[room].turnsLeft = 20;
-    rooms[room].nextPrompt = newPrompt;
-    updateAllPlayersInRoom(room);
   });
 
   socket.on('update-my-game-info', (room) => {
-    io.to(socket.id).emit('game-status-update', {
-      cumulativeStory: rooms[room].cumulativeStory,
-      turnOrder: rooms[room].turnOrder,
-      gameStarted: rooms[room].gameStarted,
-      nextPrompt: rooms[room].nextPrompt,
-      playerTurn: rooms[room].playerTurn,
-      users: rooms[room].users,
-      turnsLeft: rooms[room].turnsLeft,
-      hostPlayer: rooms[room].hostPlayer,
-      gameStarted: rooms[room].gameStarted,
-    });
+    if (rooms[room]) {
+      io.to(socket.id).emit('game-status-update', {
+        cumulativeStory: rooms[room].cumulativeStory,
+        turnOrder: rooms[room].turnOrder,
+        gameStarted: rooms[room].gameStarted,
+        nextPrompt: rooms[room].nextPrompt,
+        playerTurn: rooms[room].playerTurn,
+        users: rooms[room].users,
+        turnsLeft: rooms[room].turnsLeft,
+        hostPlayer: rooms[room].hostPlayer,
+        gameStarted: rooms[room].gameStarted,
+      });
+    }
   });
 
   socket.on('request-status-update', (room) => {
@@ -190,19 +200,23 @@ io.on('connection', (socket) => {
   });
 
   socket.on('send-new-story-snippet', (room, story, newPrompt) => {
-    if (socket.id === rooms[room].turnOrder[rooms[room].playerTurn].socketId) {
-      rooms[room].cumulativeStory += `${
-        rooms[room].users[socket.id]
-      }: ${story}<br>`;
-      rooms[room].nextPrompt = newPrompt;
-      rooms[room].turnsLeft--;
+    if (rooms[room]) {
+      if (
+        socket.id === rooms[room].turnOrder[rooms[room].playerTurn].socketId
+      ) {
+        rooms[room].cumulativeStory += `${
+          rooms[room].users[socket.id]
+        }: ${story}<br>`;
+        rooms[room].nextPrompt = newPrompt;
+        rooms[room].turnsLeft--;
 
-      if (rooms[room].playerTurn === rooms[room].turnOrder.length - 1) {
-        rooms[room].playerTurn = 0;
-      } else {
-        rooms[room].playerTurn++;
+        if (rooms[room].playerTurn === rooms[room].turnOrder.length - 1) {
+          rooms[room].playerTurn = 0;
+        } else {
+          rooms[room].playerTurn++;
+        }
+        updateAllPlayersInRoom(room);
       }
-      updateAllPlayersInRoom(room);
     }
   });
 
@@ -251,15 +265,17 @@ function roomKillTimer(room) {
 }
 
 function updateAllPlayersInRoom(room) {
-  io.in(room).emit('game-status-update', {
-    cumulativeStory: rooms[room].cumulativeStory,
-    turnOrder: rooms[room].turnOrder,
-    gameStarted: rooms[room].gameStarted,
-    nextPrompt: rooms[room].nextPrompt,
-    playerTurn: rooms[room].playerTurn,
-    users: rooms[room].users,
-    turnsLeft: rooms[room].turnsLeft,
-    hostPlayer: rooms[room].hostPlayer,
-    gameStarted: rooms[room].gameStarted,
-  });
+  if (rooms[room]) {
+    io.in(room).emit('game-status-update', {
+      cumulativeStory: rooms[room].cumulativeStory,
+      turnOrder: rooms[room].turnOrder,
+      gameStarted: rooms[room].gameStarted,
+      nextPrompt: rooms[room].nextPrompt,
+      playerTurn: rooms[room].playerTurn,
+      users: rooms[room].users,
+      turnsLeft: rooms[room].turnsLeft,
+      hostPlayer: rooms[room].hostPlayer,
+      gameStarted: rooms[room].gameStarted,
+    });
+  }
 }
