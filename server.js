@@ -96,7 +96,7 @@ app.post('/room', (req, res) => {
   rooms[req.body.room] = {
     cumulativeStory: '',
     users: {},
-    turnsLeft: 0,
+    turnsLeft: 20,
     gameStarted: 0,
     nextPrompt: ``,
     playerTurn: 0,
