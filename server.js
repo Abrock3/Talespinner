@@ -148,6 +148,8 @@ io.on('connection', (socket) => {
       // index.js will handle how to deal with that information
       socket.to(room).emit('user-connected', name);
       updateAllPlayersInRoom(room);
+    } else {
+       io.to(socket.id).emit('game-does-not-exist');
     }
   });
   // another listener for a custom socket event, this one triggers when the "send-chat-message" event gets sent by a client.
@@ -160,6 +162,8 @@ io.on('connection', (socket) => {
         message: message,
         name: rooms[room].users[socket.id],
       });
+    } else {
+       io.to(socket.id).emit('game-does-not-exist');
     }
   });
   socket.on('start-game', (room, newPrompt) => {
@@ -176,6 +180,8 @@ io.on('connection', (socket) => {
       rooms[room].turnsLeft = 20;
       rooms[room].nextPrompt = newPrompt;
       updateAllPlayersInRoom(room);
+    } else {
+      io.to(socket.id).emit('game-does-not-exist');
     }
   });
 
@@ -192,6 +198,8 @@ io.on('connection', (socket) => {
         hostPlayer: rooms[room].hostPlayer,
         gameStarted: rooms[room].gameStarted,
       });
+    } else {
+       io.to(socket.id).emit('game-does-not-exist');
     }
   });
 
@@ -217,6 +225,8 @@ io.on('connection', (socket) => {
         }
         updateAllPlayersInRoom(room);
       }
+    } else {
+       io.to(socket.id).emit('game-does-not-exist');
     }
   });
 
@@ -277,5 +287,7 @@ function updateAllPlayersInRoom(room) {
       hostPlayer: rooms[room].hostPlayer,
       gameStarted: rooms[room].gameStarted,
     });
+  } else {
+     io.to(socket.id).emit('game-does-not-exist');
   }
 }

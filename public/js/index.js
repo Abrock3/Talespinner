@@ -67,7 +67,6 @@ if (messageFormEl != null) {
         const playerEl = document.createElement('li');
         playerEl.innerHTML = `Player ${i + 1}: ${data.turnOrder[i].name}`;
         if (i === data.playerTurn) {
-          playerEl.style.border = 'solid 1px black';
           playerEl.classList.add('this-players-turn');
         }
         playerEl.classList.add('player-name-element', 'p-1');
@@ -126,8 +125,20 @@ if (messageFormEl != null) {
 
   socket.on('game-status-update', (data) => {
     fullGameStatusUpdate(socket, data);
+    if (data.turnsLeft === 0) {
+      hostPlayerSettingsFormEl.classList.add('hidden');
+      submitStoryFormEl.classList.add('hidden');
+      gameStatusInfoParaEl.classList.remove('hidden');
+      gameStatusInfoParaEl.innerText = 'The game is over! I hope you had fun writing a story with your friends!';
+    }
   });
 
+  socket.on('game-does-not-exist', () => {
+    hostPlayerSettingsFormEl.classList.add('hidden');
+    submitStoryFormEl.classList.add('hidden');
+    gameStatusInfoParaEl.classList.remove('hidden');
+    gameStatusInfoParaEl.innerText = `This room no longer exists; go back to the lobby to create another game.`;
+  });
   window.addEventListener('focus', function () {
     socket.emit('update-my-game-info', roomName);
   });
