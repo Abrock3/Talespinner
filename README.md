@@ -42,6 +42,7 @@ THEN the entire story will be unfolded in the written story section
 ```
 
 ## Images:
+![plot](images)
 
 ## Pages:
 
