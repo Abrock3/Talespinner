@@ -137,6 +137,15 @@ div.card.chatbox {
 
 }
 
+#login {
+  text-align: center;
+}
+
+.log {
+  margin-top: 3px;
+  margin-bottom: 5px;
+}
+
 /* div#chatCont{
   overflow-y: auto;
   max-height: 50%;
