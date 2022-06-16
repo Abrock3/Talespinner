@@ -32,11 +32,5 @@ createLibraryBtn.addEventListener("click", function() {
 viewLibraryBtn.addEventListener("click", function() {
     historyCard.style.visibility="visible";
 })
-
-
-searchBtn.addEventListener("click", function(e) {
-    e.preventDefault();
-    searchCard.style.visibility="visible";
-})
 var objDiv = document.getElementById("chat-container");
 objDiv.scrollTop = objDiv.scrollHeight;
