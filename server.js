@@ -49,7 +49,6 @@ const sess = {
 
 app.use(session(sess));
 
-
 // rooms is the central object that will store all game information, including room names, the users inside those rooms,
 // and any game info related to those rooms
 const rooms = {
@@ -63,7 +62,7 @@ const rooms = {
       L9UJwgk8zAwxPemQAAAR: 'Corey',
     },
     turnsLeft: 17,
-    gameStarted: 0,
+    gameStarted: 1,
     nextPrompt: 'Gatling Gun',
     playerTurn: 2,
     turnOrder: [
@@ -71,6 +70,7 @@ const rooms = {
       { socketId: '4n0nhhd0JCzp1NdjAAAN', name: 'Erica' },
       { socketId: 'ebRk5MdnEo72Nd9gAAAX', name: 'Laura' },
     ],
+    hostPlayer: { socketId: 'ebRk5MdnEo72Nd9gAAAX', name: 'Laura' },
   },
 };
 
@@ -95,13 +95,14 @@ app.post('/room', (req, res) => {
 
   // creates a room key inside of the rooms object; the key's name is identical to the user's input. it also adds a .users object to be added to later
   rooms[req.body.room] = {
-    cumulativeStory: ``,
+    cumulativeStory: '',
     users: {},
     turnsLeft: 0,
     gameStarted: 0,
     nextPrompt: ``,
     playerTurn: 0,
     turnOrder: [],
+    hostPlayer: {},
   };
   console.log('rooms');
   console.log(rooms);
@@ -135,14 +136,11 @@ io.on('connection', (socket) => {
   socket.on('new-user', (room, name) => {
     // the socket method .join() will ask socket.io to add that specific socket to the room
     socket.join(room);
-    console.log('room:');
-    console.log(room);
-    console.log('name');
-    console.log(name);
-    console.log('socket.rooms');
-    console.log(socket.rooms);
     // adds the user's socket ID as a key to the users object (for that specific room), and then sets their chosen name as the value paired with that key
     rooms[room].users[socket.id] = name;
+    if (Object.keys(rooms[room].hostPlayer).length === 0) {
+      rooms[room].hostPlayer = { socketId: socket.id, name: name };
+    }
     console.log('rooms object');
     console.log(rooms);
     // the socket.io .to() method, when combined with .emit(), will send a custom message to all users that are connected to a specific room
@@ -161,6 +159,19 @@ io.on('connection', (socket) => {
       name: rooms[room].users[socket.id],
     });
   });
+  socket.on('start-game', (room, newPrompt) => {
+    rooms[room].gameStarted = 1;
+    let turnOrderArray = [];
+    for (const user in rooms[room].users) {
+      turnOrderArray.push({ socketId: user, name: rooms[room].users[user] });
+    }
+    rooms[room].turnOrder = turnOrderArray;
+    rooms[room].playerTurn = Math.floor(Math.random() * turnOrderArray.length);
+    rooms[room].turnsLeft = 20;
+    rooms[room].nextPrompt = newPrompt;
+    updateAllPlayersInRoom(room);
+  });
+
   socket.on('update-my-game-info', (room) => {
     io.to(socket.id).emit('game-status-update', {
       cumulativeStory: rooms[room].cumulativeStory,
@@ -170,11 +181,23 @@ io.on('connection', (socket) => {
       playerTurn: rooms[room].playerTurn,
       users: rooms[room].users,
       turnsLeft: rooms[room].turnsLeft,
+      hostPlayer: rooms[room].hostPlayer,
+      gameStarted: rooms[room].gameStarted,
     });
   });
 
   socket.on('request-status-update', (room) => {
     updateAllPlayersInRoom(room);
+  });
+
+  socket.on('send-new-story-snippet', (room, story, newPrompt) => {
+    if (socket.id === rooms[room].turnOrder[rooms[room].playerTurn].socketId) {
+      rooms[room].cumulativeStory += `<p>${
+        rooms[room].users[socket.id]
+      }: ${story}</p>`;
+      rooms[room].nextPrompt = newPrompt;
+      updateAllPlayersInRoom(room);
+    }
   });
 
   // this listener listens for when a user disconnects from a room
@@ -232,6 +255,8 @@ function updateAllPlayersInRoom(room) {
     playerTurn: rooms[room].playerTurn,
     users: rooms[room].users,
     turnsLeft: rooms[room].turnsLeft,
+    hostPlayer: rooms[room].hostPlayer,
+    gameStarted: rooms[room].gameStarted,
   });
 }
 
