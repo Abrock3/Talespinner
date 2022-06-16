@@ -10,25 +10,24 @@ Library.init(
         id: {
             type: DataTypes.INTEGER,
             allowNull: false,
-            primaruKey: true,
+            primaryKey: true,
             autoIncrement: true,
         },
         name: {
             type: DataTypes.STRING,
             allowNull: false,
         },
-        stories: [{
+        stories: {
             type: DataTypes.STRING,
             allowNull: true,
-        }],
+        },
         user_id: {
             type: DataTypes.INTEGER,
             references: {
                 model: 'user',
                 key: 'id',
             },
-        },
-    
+        },  
     },
     {
         sequelize,
@@ -37,7 +36,6 @@ Library.init(
         underscored: true,
         modelName: 'library'
     }
-
 );
 
 module.exports = Library;

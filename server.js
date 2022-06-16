@@ -16,6 +16,27 @@ app.set('view engine', 'handlebars');
 app.use(express.static('public'));
 app.use(express.urlencoded({ extended: true }));
 
+////cookies
+
+const session = require('express-session');
+const SequelizeStore = require('connect-session-sequelize')(session.Store);
+const sequelize = require('./config/connection');
+
+// //cookies middle
+const sess = {
+  secret: 'Super secret secret',
+  cookie: {},
+  resave: false,
+  saveUninitialized: true,
+  // Sets up session store
+  store: new SequelizeStore({
+    db: sequelize,
+  }),
+};
+
+app.use(session(sess));
+
+
 // rooms is the central object that will store all game information, including room names, the users inside those rooms,
 // and any game info related to those rooms
 const rooms = {
