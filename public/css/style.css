@@ -26,7 +26,7 @@ li {
 .card {
   text-align: center;
   position: relative;
-  display: block;
+  display: inline;
   margin: auto;
 }
 
@@ -123,43 +123,38 @@ div.card.chatbox {
 
 } */
 
+/* .chat-messages {
+  max-height: 30%;
+} */
 
 #chatCont {
   margin-left: 5%;
-  height: 50%;
   width: 30%;
-  overflow: hidden;
   margin-top: -3%;
 }
+.chatbox {
+  height: 600px;
 
-.dyn-height.chatbox {
+}
+
+/* div#chatCont{
+  overflow-y: auto;
   max-height: 50%;
+} */
+
+ul#chat-container{
+  max-height: 600px;
+  overflow-y: auto;
 }
 
-.chat-form-container {
-  position: absolute;
-  left: 140px;
-  width: 100%;
-}
-
-#chat-box-height {
-  height: 475px;
-}
 
 /*  ---------- Book  ---------- */
-.text-container {
-  position: relative;
-  height: 485px;
-  width: 100px;
-  top: 250px;
-  left: 275px;
-}
+
 
 .book-container{
   left: 72%;
   top: 12%;
   width: 20%;
-  /* border: 3px solid purple; */
   color: black;
   font-size: 24px;
 
@@ -285,11 +280,10 @@ form#msg {
 /* ---------- Format help for creating the layout ---------- */
 /* .formatHelp {
   border: 3px solid red;
-} */
+} 
 
 
-/* .formatHelp-b {
+.formatHelp-b {
   border: 3px solid blue;
-  top: 50%;
 
 } */
