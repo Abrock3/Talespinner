@@ -22,6 +22,7 @@ li {
   position: absolute;
 }
 
+
 .card {
   text-align: center;
   position: relative;
@@ -69,10 +70,12 @@ li {
 /* ---------- Fonts ---------- */
 .leFont {
   font-family: "Quintessential", cursive;
+  color: black;
 }
 
 .mainFont {
   font-family: Verdana, Geneva, Tahoma, sans-serif;
+  color: black;
 }
 
 /* ---------- Buttons ---------- */
@@ -141,11 +144,16 @@ li {
 }
 
 .book-container {
-  position: relative;
-  margin-left: 85%;
-  width: 300px;
-  margin-top: -8%;
+  left: 72%;
+  height: 56%;
+  top: 16%;
+  width: 20%;
+  /* border: 3px solid purple; */
+  color: black;
+  font-size: 24px;
+
 }
+
 
 #title {
   top: 150px;
@@ -253,7 +261,15 @@ form#msg {
 
 
 
+
 /* ---------- Format help for creating the layout ---------- */
-.formatHelp {
+/* .formatHelp {
   border: 3px solid red;
-}
+} */
+
+
+/* .formatHelp-b {
+  border: 3px solid blue;
+  top: 50%;
+
+} */
