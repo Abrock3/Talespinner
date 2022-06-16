@@ -29,9 +29,9 @@ const sess = {
   resave: false,
   saveUninitialized: true,
   // Sets up session store
-  store: new SequelizeStore({
-    db: sequelize,
-  }),
+  // store: new SequelizeStore({
+  //   db: sequelize,
+  // }),
 };
 
 app.use(session(sess));
