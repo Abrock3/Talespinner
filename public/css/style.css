@@ -152,13 +152,27 @@ ul#chat-container{
 
 
 .book-container{
-  left: 72%;
-  top: 12%;
+
   width: 20%;
   color: black;
   font-size: 24px;
 
 }
+
+#prompt {
+  left: 47%;
+  top: 22%;
+  border: 3px solid green;
+  max-height: 60%;
+
+}
+
+#user-text {
+  left: 72%;
+  top: 12%;
+
+}
+
 
 .dyn-height.book-container {
   max-height:60%;
