@@ -1,7 +1,7 @@
-const joinRoomFormEl = document.getElementsById('joinRoomForm');
-
+const joinRoomFormEl = document.getElementById('joinRoomForm');
+const joinRoomInputEl = document.getElementById('joinRoomInput');
 joinRoomFormEl.addEventListener('submit', (e) => {
   e.preventDefault();
-  const searchedRoom = joinRoomFormEl.innerText;
-  window.location.href = `https://talespinner.herokuapp.com/${searchedRoom}`;
+  const searchedRoom = joinRoomInputEl.value;
+  document.location = '/' + searchedRoom;
 });
