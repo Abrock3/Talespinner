@@ -42,11 +42,14 @@ THEN the entire story will be unfolded in the written story section
 ```
 
 ## Images:
+![plot](./public/images/Landing%20Page.PNG)
+![plot](./public/images/Lobby.PNG)
+![plot](./public/images/Lobby_with_create.PNG)
+![plot](./public/images/Chat.PNG)
 
 ## Pages:
 
-To enjoy our game on Heroku, please click [HERE](#TBD)
-
+To enjoy our game on Heroku, please click [HERE](https://talespinner.herokuapp.com/)
 The code can be located at the [Github Repository](https://github.com/Abrock3/Talespinner)
 
 ## Collaborators:
