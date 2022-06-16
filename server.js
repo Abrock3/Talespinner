@@ -7,6 +7,19 @@ const server = require('http').Server(app);
 const io = require('socket.io')(server);
 
 const exphbs = require('express-handlebars');
+
+
+// const sess = {
+//   secret: 'Super secret secret',
+//   cookie: {},
+//   resave: false,
+//   saveUninitialized: true,
+//   store: new SequelizeStore({
+//     db: sequelize
+//   })
+// };
+
+// app.use(session(sess));
 // initializing handlebars and telling JS which templating engine we're using
 const hbs = exphbs.create({});
 app.engine('handlebars', hbs.engine);
@@ -69,6 +82,10 @@ app.get('/', (req, res) => {
 app.get('/lobby', (req, res) => {
   res.render('lobby', { layout: 'main' });
 });
+app.get('/login', (req, res) => {
+  res.render('login', { layout: 'main' });
+});
+
 // /room is not a page, it's a route for the "lobby" page to send info when a user is attempting to create a room
 app.post('/room', (req, res) => {
   // If the user types a room name that already exists, they'll be redirected back to /lobby to try again
@@ -204,6 +221,8 @@ function roomKillTimer(room) {
     }
   }, 1000);
 }
+
+
 function updateAllPlayersInRoom(room) {
   io.in(room).emit('game-status-update', {
     cumulativeStory: rooms[room].cumulativeStory,
@@ -215,3 +234,4 @@ function updateAllPlayersInRoom(room) {
     turnsLeft: rooms[room].turnsLeft,
   });
 }
+
