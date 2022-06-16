@@ -8,7 +8,6 @@ const io = require('socket.io')(server);
 
 const exphbs = require('express-handlebars');
 
-
 // const sess = {
 //   secret: 'Super secret secret',
 //   cookie: {},
@@ -192,10 +191,17 @@ io.on('connection', (socket) => {
 
   socket.on('send-new-story-snippet', (room, story, newPrompt) => {
     if (socket.id === rooms[room].turnOrder[rooms[room].playerTurn].socketId) {
-      rooms[room].cumulativeStory += `<p>${
+      rooms[room].cumulativeStory += `${
         rooms[room].users[socket.id]
-      }: ${story}</p>`;
+      }: ${story}<br>`;
       rooms[room].nextPrompt = newPrompt;
+      rooms[room].turnsLeft--;
+
+      if (rooms[room].playerTurn === rooms[room].turnOrder.length - 1) {
+        rooms[room].playerTurn = 0;
+      } else {
+        rooms[room].playerTurn++;
+      }
       updateAllPlayersInRoom(room);
     }
   });
@@ -205,7 +211,6 @@ io.on('connection', (socket) => {
     getUserRooms(socket).forEach((room) => {
       // sends a custom socket event to the room they left, to be dealt with by the index.js code of the other users
       socket.to(room).emit('user-disconnected', rooms[room].users[socket.id]);
-
       // deletes their socket id key from the users object of that room
       delete rooms[room].users[socket.id];
       console.log(rooms[room].users);
@@ -245,7 +250,6 @@ function roomKillTimer(room) {
   }, 1000);
 }
 
-
 function updateAllPlayersInRoom(room) {
   io.in(room).emit('game-status-update', {
     cumulativeStory: rooms[room].cumulativeStory,
@@ -259,4 +263,3 @@ function updateAllPlayersInRoom(room) {
     gameStarted: rooms[room].gameStarted,
   });
 }
-
