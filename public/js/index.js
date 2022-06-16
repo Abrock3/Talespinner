@@ -19,6 +19,7 @@ if (messageForm != null) {
   appendMessage('You joined');
   // this will store the name of the room, this will get referenced by socket events
   const roomName = window.location.pathname.replace('/', '');
+  libraryNameEl.innerHTML = roomName;
   // lets the server know that there's a new user, there is a listener in server.js that will pick this up and use the information it sends
   socket.emit('new-user', roomName, name);
   socket.emit('request-status-update', roomName);
@@ -29,19 +30,12 @@ if (messageForm != null) {
     appendMessage(`You: ${message}`);
     // sends your chat message up to the server, where there's a listener that will decide what to do with it (most likely send it to the other people in your room)
     socket.emit('send-chat-message', roomName, message);
-
     messageInput.value = '';
   });
-  socket.on('game-status-update', (data) => {
-    gameStatusUpdate(socket, data);
-  });
-  function gameStatusUpdate(socket, data) {
+
+  function updatePlayerList(data) {
     console.log(data);
-    libraryNameEl.innerHTML = '';
     playerListEl.innerHTML = '';
-    gameStatusAnnouncementEl.innerHTML = '';
-    storyTextEl.innerHTML = '';
-    libraryNameEl.innerHTML = roomName;
     if (data.gameStarted === 0) {
       Object.values(data.users).forEach((e, index) => {
         const playerEl = document.createElement('li');
@@ -61,6 +55,10 @@ if (messageForm != null) {
         playerListEl.append(playerEl);
       }
     }
+  }
+
+  function updateGameStatus(socket, data) {
+    console.log(data);
     if (data.gameStarted) {
       gameStatusAnnouncementEl.innerHTML = `It is ${
         socket.id === data.turnOrder[data.playerTurn].socketId
@@ -71,12 +69,30 @@ if (messageForm != null) {
       } turns left in the game. The next statement must include "${
         data.nextPrompt
       }."`;
-      storyTextEl.innerHTML = data.cumulativeStory;
     } else {
       gameStatusAnnouncementEl.innerHTML = `Game status: the host has not started the game yet.`;
     }
   }
+
+  function updateCumulativeStory(data) {
+    console.log(data);
+    storyTextEl.innerHTML = data.cumulativeStory;
+  }
+
+  function fullGameStatusUpdate(socket, data) {
+    console.log('Fullgamestatusupdate');
+    updatePlayerList(data);
+    updateGameStatus(socket, data);
+    updateCumulativeStory(data);
+  }
+  socket.on('game-status-update', (data) => {
+    fullGameStatusUpdate(socket, data);
+  });
+  window.addEventListener('focus', function () {
+    socket.emit('update-my-game-info', roomName);
+  });
 }
+
 // listens for a chat-message from the server (which originally came from another client) and displays it
 socket.on('chat-message', (data) => {
   appendMessage(`${data.name}: ${data.message}`);

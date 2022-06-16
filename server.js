@@ -20,9 +20,9 @@ app.use(express.urlencoded({ extended: true }));
 // and any game info related to those rooms
 const rooms = {
   testRoom: {
-    cumulativeStory: `<h3> Corey: Blah Blah Blah.<h3>
-    <h3>Erica: Nah Nah Nah.</h3>
-    <h3>Laura: Dah Dah Dah</h3>`,
+    cumulativeStory: `<p> Corey: Blah Blah Blah.<p>
+    <p>Erica: Nah Nah Nah.</p>
+    <p>Laura: Dah Dah Dah</p>`,
     users: {
       ebRk5MdnEo72Nd9gAAAX: 'Laura',
       '4n0nhhd0JCzp1NdjAAAN': 'Erica',
@@ -56,7 +56,15 @@ app.post('/room', (req, res) => {
   }
 
   // creates a room key inside of the rooms object; the key's name is identical to the user's input. it also adds a .users object to be added to later
-  rooms[req.body.room] = { users: {} };
+  rooms[req.body.room] = {
+    cumulativeStory: ``,
+    users: {},
+    turnsLeft: 0,
+    gameStarted: 0,
+    nextPrompt: ``,
+    playerTurn: 0,
+    turnOrder: [],
+  };
   console.log('rooms');
   console.log(rooms);
   // this will redirect the client to the relative path of "/[their chosen room name]". This is handled below, in the "/:room" route
@@ -103,6 +111,7 @@ io.on('connection', (socket) => {
     // this message specifically will let all people in the room that's being joined know that there is a new user, and what their name is.
     // index.js will handle how to deal with that information
     socket.to(room).emit('user-connected', name);
+    updateAllPlayersInRoom(room);
   });
   // another listener for a custom socket event, this one triggers when the "send-chat-message" event gets sent by a client.
   // the room the user is in and their message will also be passed into this listener, which can then be used in the callback
@@ -114,9 +123,8 @@ io.on('connection', (socket) => {
       name: rooms[room].users[socket.id],
     });
   });
-  socket.on('request-status-update', (room) => {
-    console.log('inside the request-status-update event');
-    io.in(room).emit('game-status-update', {
+  socket.on('update-my-game-info', (room) => {
+    io.to(socket.id).emit('game-status-update', {
       cumulativeStory: rooms[room].cumulativeStory,
       turnOrder: rooms[room].turnOrder,
       gameStarted: rooms[room].gameStarted,
@@ -126,11 +134,17 @@ io.on('connection', (socket) => {
       turnsLeft: rooms[room].turnsLeft,
     });
   });
+
+  socket.on('request-status-update', (room) => {
+    updateAllPlayersInRoom(room);
+  });
+
   // this listener listens for when a user disconnects from a room
   socket.on('disconnect', () => {
     getUserRooms(socket).forEach((room) => {
       // sends a custom socket event to the room they left, to be dealt with by the index.js code of the other users
       socket.to(room).emit('user-disconnected', rooms[room].users[socket.id]);
+
       // deletes their socket id key from the users object of that room
       delete rooms[room].users[socket.id];
       console.log(rooms[room].users);
@@ -138,6 +152,7 @@ io.on('connection', (socket) => {
       if (Object.keys(rooms[room].users).length === 0) {
         roomKillTimer(room);
       }
+      updateAllPlayersInRoom(room);
     });
   });
 });
@@ -167,4 +182,15 @@ function roomKillTimer(room) {
       clearInterval(roomKillInterval);
     }
   }, 1000);
+}
+function updateAllPlayersInRoom(room) {
+  io.in(room).emit('game-status-update', {
+    cumulativeStory: rooms[room].cumulativeStory,
+    turnOrder: rooms[room].turnOrder,
+    gameStarted: rooms[room].gameStarted,
+    nextPrompt: rooms[room].nextPrompt,
+    playerTurn: rooms[room].playerTurn,
+    users: rooms[room].users,
+    turnsLeft: rooms[room].turnsLeft,
+  });
 }
