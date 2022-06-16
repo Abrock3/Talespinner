@@ -26,7 +26,7 @@ li {
 .card {
   text-align: center;
   position: relative;
-  display: block;
+  display: inline;
   margin: auto;
 }
 
@@ -117,42 +117,73 @@ li {
 }
 
 /*  ---------- Chat Box ---------- */
+/* 
+div.card.chatbox {
+
+
+} */
+
+/* .chat-messages {
+  max-height: 30%;
+} */
+
+#chatCont {
+  margin-left: 5%;
+  width: 30%;
+  margin-top: -3%;
+}
 .chatbox {
-  margin-left: 10%;
-  height: 50%;
-  overflow: hidden;
-  position: absolute;
+  height: 600px;
+
 }
 
-.chat-form-container {
-  position: absolute;
-  left: 140px;
-  width: 100%;
+/* div#chatCont{
+  overflow-y: auto;
+  max-height: 50%;
+} */
+
+ul#chat-container{
+  max-height: 600px;
+  overflow-y: auto;
 }
 
-#chat-box-height {
-  height: 475px;
-}
 
 /*  ---------- Book  ---------- */
-.text-container {
-  position: relative;
-  height: 485px;
-  width: 100px;
-  top: 250px;
-  left: 275px;
-}
 
-.book-container {
-  left: 72%;
-  height: 56%;
-  top: 16%;
+
+.book-container{
+
   width: 20%;
-  /* border: 3px solid purple; */
   color: black;
   font-size: 24px;
 
 }
+
+#prompt {
+  left: 47%;
+  top: 22%;
+  border: 3px solid green;
+  max-height: 60%;
+
+}
+
+#user-text {
+  left: 72%;
+  top: 12%;
+
+}
+
+
+.dyn-height.book-container {
+  max-height:60%;
+}
+
+
+
+.dyn-height {
+  overflow-y:auto;
+}
+
 
 
 #title {
@@ -166,9 +197,7 @@ li {
   color:black
 }
 
-div.card.chatbox {
-  margin-left: 7%;
-}
+
 
 h3#library-name {
   display: block;
@@ -265,11 +294,10 @@ form#msg {
 /* ---------- Format help for creating the layout ---------- */
 /* .formatHelp {
   border: 3px solid red;
-} */
+} 
 
 
-/* .formatHelp-b {
+.formatHelp-b {
   border: 3px solid blue;
-  top: 50%;
 
 } */
