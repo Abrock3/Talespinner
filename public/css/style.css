@@ -117,11 +117,23 @@ li {
 }
 
 /*  ---------- Chat Box ---------- */
-.chatbox {
-  margin-left: 10%;
+/* 
+div.card.chatbox {
+
+
+} */
+
+
+#chatCont {
+  margin-left: 5%;
   height: 50%;
+  width: 30%;
   overflow: hidden;
-  position: absolute;
+  margin-top: -3%;
+}
+
+.dyn-height.chatbox {
+  max-height: 50%;
 }
 
 .chat-form-container {
@@ -143,16 +155,26 @@ li {
   left: 275px;
 }
 
-.book-container {
+.book-container{
   left: 72%;
-  height: 56%;
-  top: 16%;
+  top: 12%;
   width: 20%;
   /* border: 3px solid purple; */
   color: black;
   font-size: 24px;
 
 }
+
+.dyn-height.book-container {
+  max-height:60%;
+}
+
+
+
+.dyn-height {
+  overflow-y:auto;
+}
+
 
 
 #title {
@@ -166,9 +188,7 @@ li {
   color:black
 }
 
-div.card.chatbox {
-  margin-left: 7%;
-}
+
 
 h3#library-name {
   display: block;
