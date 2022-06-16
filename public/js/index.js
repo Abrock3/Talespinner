@@ -10,7 +10,7 @@ const gameStatusAnnouncementEl = document.getElementById(
   'game-status-announcement'
 );
 const startGameButtonEl = document.getElementById('start-game-button');
-const storyTextEl = document.getElementById('story-text');
+const storyTextEl = document.getElementById('user-text');
 
 // this determines if the client is in the game lobby and if so runs the code below
 if (messageForm != null) {
