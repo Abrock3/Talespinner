@@ -5,9 +5,7 @@ const messageFormEl = document.getElementById('chat-form');
 const messageInputEl = document.getElementById('msg');
 const libraryNameEl = document.getElementById('library-name');
 const playerListEl = document.getElementById('player-list');
-const gameStatusAnnouncementEl = document.getElementById(
-  'game-status-announcement'
-);
+
 const startGameButtonEl = document.getElementById('start-game-button');
 const storyTextEl = document.getElementById('user-text');
 const submitStoryFormEl = document.getElementById('submit-story-form');
@@ -78,22 +76,6 @@ if (messageFormEl != null) {
     }
   }
 
-  function updateGameStatus(socket, data) {
-    if (data.gameStarted) {
-      gameStatusAnnouncementEl.innerHTML = `It's ${
-        socket.id === data.turnOrder[data.playerTurn].socketId
-          ? 'your'
-          : data.turnOrder[data.playerTurn].name + "'s"
-      } turn. There are ${
-        data.turnsLeft
-      } turns left in the game. The next statement must include "${
-        data.nextPrompt
-      }."`;
-    } else {
-      gameStatusAnnouncementEl.innerHTML = `Game status: the host has not started the game yet.`;
-    }
-  }
-
   function updateCumulativeStory(data) {
     storyTextEl.innerHTML = data.cumulativeStory;
   }
@@ -120,6 +102,7 @@ if (messageFormEl != null) {
       hostPlayerSettingsFormEl.classList.add('hidden');
       submitStoryFormEl.classList.remove('hidden');
       gameStatusInfoParaEl.classList.add('hidden');
+      promptDisplayEl.innerText = data.nextPrompt;
     } else if (
       data.turnOrder[data.playerTurn].socketId !== socket.id &&
       data.gameStarted === 1
@@ -137,7 +120,6 @@ if (messageFormEl != null) {
 
   function fullGameStatusUpdate(socket, data) {
     updatePlayerList(data);
-    updateGameStatus(socket, data);
     updateCumulativeStory(data);
     updateFormStatus(socket, data);
   }
