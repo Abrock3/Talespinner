@@ -42,8 +42,14 @@ li {
   margin-top: 200px;
 }
 
-.inlinedatshit{
+/* ---------- Game Box  ---------- */
+.game-box{
   display: inline;
+  width: 25%;
+  top: 50px;
+  margin-top: 17%;
+  margin-left: 45%;
+  height: 50%;
 }
 
 /*  ---------- Jumbotrons  ---------- */
@@ -296,8 +302,13 @@ form#msg {
   border: 3px solid red;
 }  */
 
-/*
+
 .formatHelp-b {
   border: 3px solid blue;
 
-} */
+}
+
+.formatHelp-a {
+  border: 3px solid pink;
+
+}

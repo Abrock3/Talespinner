@@ -1,13 +1,13 @@
-<body class="jumbotron container-fluid formatHelp" id="jumbo-main">
+<body class="jumbotron container-fluid" id="jumbo-main">
   {{!-- game-status-display box --}}
-  <section class="inlinedatshit formatHelp" id="game-status-display">
+  <section class="game-box formatHelp-b" id="game-status-display">
     {{!-- lobby name will get inserted with js --}}
-    <h3 class="formatHelp" id="library-name"></h3>
+    <h3 class="formatHelp-a" id="library-name"></h3>
     {{!-- player names will be inserted with js --}}
-    <ul id="player-list">
+    <ul class="formatHelp-b" id="player-list">
     </ul>
     {{!-- game status will appear here --}}
-    <p id="game-status-announcement"></p>
+    <p class="formatHelp-a" id="game-status-announcement"></p>
     <button id="start-game-button" class="hidden">Start Game</button>
   </section>
   
@@ -20,7 +20,7 @@
           <h5 class="card-title chat-header formatHelp">Room Name</h5>
           <p class="formatHelp ">Welcome</p>
           <a href="/home" class="btn mainFont formatHelp" id="leave-btn">Leave Room</a>
-          <ul class="card-text chat-main chat-messages mainFont formatHelp-b dyn-height" id="chat-container">
+          <ul class="card-text chat-main chat-messages mainFont dyn-height" id="chat-container">
             <ul>
         </div>
 
