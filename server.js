@@ -7,6 +7,19 @@ const server = require('http').Server(app);
 const io = require('socket.io')(server);
 
 const exphbs = require('express-handlebars');
+
+
+// const sess = {
+//   secret: 'Super secret secret',
+//   cookie: {},
+//   resave: false,
+//   saveUninitialized: true,
+//   store: new SequelizeStore({
+//     db: sequelize
+//   })
+// };
+
+// app.use(session(sess));
 // initializing handlebars and telling JS which templating engine we're using
 const hbs = exphbs.create({});
 app.engine('handlebars', hbs.engine);
@@ -47,6 +60,41 @@ app.get('/', (req, res) => {
 // works similarly to the above route
 app.get('/lobby', (req, res) => {
   res.render('lobby', { layout: 'main' });
+});
+app.get('/login', (req, res) => {
+  res.render('login', { layout: 'main' });
+});
+
+router.post('/login', async (req, res) => {
+  try {
+    const userData = await User.findOne({ where: { email: req.body.email } });
+
+    if (!userData) {
+      res
+        .status(400)
+        .json({ message: 'Incorrect email or password, please try again' });
+      return;
+    }
+
+    const validPassword = await userData.checkPassword(req.body.password);
+
+    if (!validPassword) {
+      res
+        .status(400)
+        .json({ message: 'Incorrect email or password, please try again' });
+      return;
+    }
+
+    req.session.save(() => {
+      req.session.user_id = userData.id;
+      req.session.logged_in = true;
+      
+      res.json({ user: userData, message: 'You are now logged in!' });
+    });
+
+  } catch (err) {
+    res.status(400).json(err);
+  }
 });
 // /room is not a page, it's a route for the "lobby" page to send info when a user is attempting to create a room
 app.post('/room', (req, res) => {
@@ -168,3 +216,4 @@ function roomKillTimer(room) {
     }
   }, 1000);
 }
+

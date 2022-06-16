@@ -21,5 +21,18 @@
     <link rel='stylesheet' href='css/style.css' />
     <title>Talespinner</title>
   </head>
+
+  <body>
+
+    <header>
+      {{#if logged_in}}
+        <a href="/lobby">lobby</a> |
+        <button class="no-button" id="logout">logout</button>
+        {{else}}
+        <a href="/login">login</a>
+        {{/if}}
+    </header>
+    
     {{{body}}}
+  </body>
 </html>
