@@ -105,13 +105,16 @@ li {
   text-align: center;
   color: black;
   margin-left: 30%;
+  margin-top: -50%;
 
 }
 
 /*  ---------- Chat Box ---------- */
 .chatbox {
-  /* margin-left: 75px; */
-  height: 90%;
+  margin-left: 10%;
+  height: 50%;
+  overflow: hidden;
+  position: absolute;
 }
 
 /* .chat-form-container {
@@ -155,7 +158,16 @@ div.card.chatbox {
   margin-left: 7%;
 }
 
+h3#library-name {
+  display: block;
+  margin: auto;
+ 
+}
 
+form#msg {
+  position: relative;
+  margin-bottom: 5%;
+}
 
 /* ---------- Media Query ---------- */
 
