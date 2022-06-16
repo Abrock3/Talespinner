@@ -191,11 +191,11 @@ ul#chat-container{
   left: 350px;
 }
 
-#story-text {
+/* #story-text {
   width: 300px;
   height: 500px;
   color:black
-}
+} */
 
 
 
@@ -292,11 +292,11 @@ form#msg {
 
 
 /* ---------- Format help for creating the layout ---------- */
-/* .formatHelp {
+ /* .formatHelp {
   border: 3px solid red;
-} 
+}  */
 
-
+/*
 .formatHelp-b {
   border: 3px solid blue;
 

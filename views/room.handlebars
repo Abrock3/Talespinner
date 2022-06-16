@@ -1,180 +1,160 @@
-
 <body class="jumbotron container-fluid formatHelp" id="jumbo-main">
   {{!-- game-status-display box --}}
-  <section class="inlinedatshit formatHelp" id = "game-status-display">
+  <section class="inlinedatshit formatHelp" id="game-status-display">
     {{!-- lobby name will get inserted with js --}}
-    <h3 class="formatHelp" id ="library-name" ></h3>
+    <h3 class="formatHelp" id="library-name"></h3>
     {{!-- player names will be inserted with js --}}
-    <ul id = "player-list">
+    <ul id="player-list">
     </ul>
-{{!-- game status will appear here --}}
+    {{!-- game status will appear here --}}
     <p id="game-status-announcement"></p>
-    <button id = "start-game-button" class = "hidden">Start Game</button>
+    <button id="start-game-button" class="hidden">Start Game</button>
   </section>
-    <!---------------Input chat box--------------->
-    <div>
-      <div class="row">
-        <div
-        class="card text-center mainFont  position-sticky formatHelp" id="chatCont">
+  
+  <!---------------Input chat box--------------->
+  <div>
+    <div class="row">
+      <div class="card text-center mainFont  position-sticky container-fluid formatHelp" id="chatCont">
         <div class=" chat-container formatHelp">
           <h2 class="text-center formatHelp">Spin Your Tale!</h2>
           <h5 class="card-title chat-header formatHelp">Room Name</h5>
           <p class="formatHelp ">Welcome</p>
           <a href="/home" class="btn mainFont formatHelp" id="leave-btn">Leave Room</a>
-          <ul class="card-text chat-main chat-messages mainFont formatHelp-b dyn-height" id ="chat-container"><ul>
+          <ul class="card-text chat-main chat-messages mainFont formatHelp-b dyn-height" id="chat-container">
+            <ul>
         </div>
-    
-          <form class="formatHelp container-fluid d-flex p-2 flex-column" id="chat-form">
-            <input class="container-fluid" id="msg" type="text" placeholder="Type a Message" required autocomplete="off" />
-            <button class="btn sml btn-secondary" id="submitBtn">Submit</button>
-          </form>
+
+        <form class="formatHelp container-fluid d-flex p-2 flex-column" id="chat-form">
+          <input class="container-fluid" id="msg" type="text" placeholder="Type a Message" required
+            autocomplete="off" />
+          <button class="btn sml btn-secondary" id="submitBtn">Submit</button>
+        </form>
       </div>
+
+
       <!---------------Book--------------->
-
-      
-
       <div class="leFont book-container position-absolute container-fluid dyn-height" id="user-text">
-        {{!-- <div class="text-dark leFont formatHelp-b"> --}}
-          <!-- temporarily removed the "id="story-text" will add back in once layout is done -->
 
-            The pain itself is the love of the pain, the main ecological
-            problems, but I give this kind of time to fall down, so that some
-            great pain and pain. In order that for the most part, any one of us
-            will come to the exercise of any kind of employment except to take
-            advantage of the objectives from it..
-            The pain itself is the love of the pain, the main ecological
-            problems, but I give this kind of time to fall down, so that some
-            great pain and pain. In order that for the most part, any one of us
-            will come to the exercise of any kind of employment except to take
-            advantage of the objectives from it..
-            The pain itself is the love of the pain, the main ecological
-            problems, but I give this kind of time to fall down, so that some
-            great pain and pain. In order that for the most part, any one of us
-            will come to the exercise of any kind of employment except to take
-            advantage of the objectives from it..
-            The pain itself is the love of the pain, the main ecological
-            problems, but I give this kind of time to fall down, so that some
-            great pain and pain. In order that for the most part, any one of us
-            will come to the exercise of any kind of employment except to take
-            advantage of the objectives from it..
-            The pain itself is the love of the pain, the main ecological
-            problems, but I give this kind of time to fall down, so that some
-            great pain and pain. In order that for the most part, any one of us
-            will come to the exercise of any kind of employment except to take
-            advantage of the objectives from it..
-            The pain itself is the love of the pain, the main ecological
-            problems, but I give this kind of time to fall down, so that some
-            great pain and pain. In order that for the most part, any one of us
-            will come to the exercise of any kind of employment except to take
-            advantage of the objectives from it..
-            The pain itself is the love of the pain, the main ecological
-            problems, but I give this kind of time to fall down, so that some
-            great pain and pain. In order that for the most part, any one of us
-            will come to the exercise of any kind of employment except to take
-            advantage of the objectives from it..
-            The pain itself is the love of the pain, the main ecological
-            problems, but I give this kind of time to fall down, so that some
-            great pain and pain. In order that for the most part, any one of us
-            will come to the exercise of any kind of employment except to take
-            advantage of the objectives from it..
-            The pain itself is the love of the pain, the main ecological
-            problems, but I give this kind of time to fall down, so that some
-            great pain and pain. In order that for the most part, any one of us
-            will come to the exercise of any kind of employment except to take
-            advantage of the objectives from it..
-            The pain itself is the love of the pain, the main ecological
-            problems, but I give this kind of time to fall down, so that some
-            great pain and pain. In order that for the most part, any one of us
-            will come to the exercise of any kind of employment except to take
-            advantage of the objectives from it..
-            The pain itself is the love of the pain, the main ecological
-            problems, but I give this kind of time to fall down, so that some
-            great pain and pain. In order that for the most part, any one of us
-            will come to the exercise of any kind of employment except to take
-            advantage of the objectives from it..
-            The pain itself is the love of the pain, the main ecological
-            problems, but I give this kind of time to fall down, so that some
-            great pain and pain. In order that for the most part, any one of us
-            will come to the exercise of any kind of employment except to take
-            advantage of the objectives from it..
-            The pain itself is the love of the pain, the main ecological
-            problems, but I give this kind of time to fall down, so that some
-            great pain and pain. In order that for the most part, any one of us
-            will come to the exercise of any kind of employment except to take
-            advantage of the objectives from it..
-            The pain itself is the love of the pain, the main ecological
-            problems, but I give this kind of time to fall down, so that some
-            great pain and pain. In order that for the most part, any one of us
-            will come to the exercise of any kind of employment except to take
-            advantage of the objectives from it..
-            The pain itself is the love of the pain, the main ecological
-            problems, but I give this kind of time to fall down, so that some
-            great pain and pain. In order that for the most part, any one of us
-            will come to the exercise of any kind of employment except to take
-            advantage of the objectives from it..
-            The pain itself is the love of the pain, the main ecological
-            problems, but I give this kind of time to fall down, so that some
-            great pain and pain. In order that for the most part, any one of us
-            will come to the exercise of any kind of employment except to take
-            advantage of the objectives from it..
-            The pain itself is the love of the pain, the main ecological
-            problems, but I give this kind of time to fall down, so that some
-            great pain and pain. In order that for the most part, any one of us
-            will come to the exercise of any kind of employment except to take
-            advantage of the objectives from it..
-            The pain itself is the love of the pain, the main ecological
-            problems, but I give this kind of time to fall down, so that some
-            great pain and pain. In order that for the most part, any one of us
-            will come to the exercise of any kind of employment except to take
-            advantage of the objectives from it..
-            The pain itself is the love of the pain, the main ecological
-            problems, but I give this kind of time to fall down, so that some
-            great pain and pain. In order that for the most part, any one of us
-            will come to the exercise of any kind of employment except to take
-            advantage of the objectives from it..
-            The pain itself is the love of the pain, the main ecological
-            problems, but I give this kind of time to fall down, so that some
-            great pain and pain. In order that for the most part, any one of us
-            will come to the exercise of any kind of employment except to take
-            advantage of the objectives from it..
+        The pain itself is the love of the pain, the main ecological
+        problems, but I give this kind of time to fall down, so that some
+        great pain and pain. In order that for the most part, any one of us
+        will come to the exercise of any kind of employment except to take
+        advantage of the objectives from it..
+        The pain itself is the love of the pain, the main ecological
+        problems, but I give this kind of time to fall down, so that some
+        great pain and pain. In order that for the most part, any one of us
+        will come to the exercise of any kind of employment except to take
+        advantage of the objectives from it..
+        The pain itself is the love of the pain, the main ecological
+        problems, but I give this kind of time to fall down, so that some
+        great pain and pain. In order that for the most part, any one of us
+        will come to the exercise of any kind of employment except to take
+        advantage of the objectives from it..
+        The pain itself is the love of the pain, the main ecological
+        problems, but I give this kind of time to fall down, so that some
+        great pain and pain. In order that for the most part, any one of us
+        will come to the exercise of any kind of employment except to take
+        advantage of the objectives from it..
+        The pain itself is the love of the pain, the main ecological
+        problems, but I give this kind of time to fall down, so that some
+        great pain and pain. In order that for the most part, any one of us
+        will come to the exercise of any kind of employment except to take
+        advantage of the objectives from it..
+        The pain itself is the love of the pain, the main ecological
+        problems, but I give this kind of time to fall down, so that some
+        great pain and pain. In order that for the most part, any one of us
+        will come to the exercise of any kind of employment except to take
+        advantage of the objectives from it..
+        The pain itself is the love of the pain, the main ecological
+        problems, but I give this kind of time to fall down, so that some
+        great pain and pain. In order that for the most part, any one of us
+        will come to the exercise of any kind of employment except to take
+        advantage of the objectives from it..
+        The pain itself is the love of the pain, the main ecological
+        problems, but I give this kind of time to fall down, so that some
+        great pain and pain. In order that for the most part, any one of us
+        will come to the exercise of any kind of employment except to take
+        advantage of the objectives from it..
+        The pain itself is the love of the pain, the main ecological
+        problems, but I give this kind of time to fall down, so that some
+        great pain and pain. In order that for the most part, any one of us
+        will come to the exercise of any kind of employment except to take
+        advantage of the objectives from it..
+        The pain itself is the love of the pain, the main ecological
+        problems, but I give this kind of time to fall down, so that some
+        great pain and pain. In order that for the most part, any one of us
+        will come to the exercise of any kind of employment except to take
+        advantage of the objectives from it..
+        The pain itself is the love of the pain, the main ecological
+        problems, but I give this kind of time to fall down, so that some
+        great pain and pain. In order that for the most part, any one of us
+        will come to the exercise of any kind of employment except to take
+        advantage of the objectives from it..
+        The pain itself is the love of the pain, the main ecological
+        problems, but I give this kind of time to fall down, so that some
+        great pain and pain. In order that for the most part, any one of us
+        will come to the exercise of any kind of employment except to take
+        advantage of the objectives from it..
+        The pain itself is the love of the pain, the main ecological
+        problems, but I give this kind of time to fall down, so that some
+        great pain and pain. In order that for the most part, any one of us
+        will come to the exercise of any kind of employment except to take
+        advantage of the objectives from it..
+        The pain itself is the love of the pain, the main ecological
+        problems, but I give this kind of time to fall down, so that some
+        great pain and pain. In order that for the most part, any one of us
+        will come to the exercise of any kind of employment except to take
+        advantage of the objectives from it..
+        The pain itself is the love of the pain, the main ecological
+        problems, but I give this kind of time to fall down, so that some
+        great pain and pain. In order that for the most part, any one of us
+        will come to the exercise of any kind of employment except to take
+        advantage of the objectives from it..
+        The pain itself is the love of the pain, the main ecological
+        problems, but I give this kind of time to fall down, so that some
+        great pain and pain. In order that for the most part, any one of us
+        will come to the exercise of any kind of employment except to take
+        advantage of the objectives from it..
+        The pain itself is the love of the pain, the main ecological
+        problems, but I give this kind of time to fall down, so that some
+        great pain and pain. In order that for the most part, any one of us
+        will come to the exercise of any kind of employment except to take
+        advantage of the objectives from it..
+        The pain itself is the love of the pain, the main ecological
+        problems, but I give this kind of time to fall down, so that some
+        great pain and pain. In order that for the most part, any one of us
+        will come to the exercise of any kind of employment except to take
+        advantage of the objectives from it..
+        The pain itself is the love of the pain, the main ecological
+        problems, but I give this kind of time to fall down, so that some
+        great pain and pain. In order that for the most part, any one of us
+        will come to the exercise of any kind of employment except to take
+        advantage of the objectives from it..
+        The pain itself is the love of the pain, the main ecological
+        problems, but I give this kind of time to fall down, so that some
+        great pain and pain. In order that for the most part, any one of us
+        will come to the exercise of any kind of employment except to take
+        advantage of the objectives from it..
 
-            
       </div>
 
-      <!-- <div class="book-container leFont formatHelp"> -->
-        <!-- <div class="text-container container-fluid formatHelp"> -->
-          <!-- <h2 class="container-fluid content text-container formatHelp" id="title">Library Title</h2>
-          <div class="content container-fluid formatHelp" id="text">The pain itself is the love of the pain, the main ecological
-            problems, but I give this kind of time to fall down, so that some
-            great pain and pain. In order that for the most part, any one of us
-            will come to the exercise of any kind of employment except to take
-            advantage of the objectives from it.</div> -->
-        <!-- </div> -->
-        <!-- Continued Container so text appears on both sides  -->
-        <!-- <div class="text-container" id="continue-container">
-          <div class="content" id="continued">generated content</div>
-        </div> -->
-      <!-- </div> -->
-      </div>
-
-       <div class="leFont book-container position-absolute container-fluid" id="prompt">
+      <div class="leFont book-container position-absolute container-fluid" id="prompt">
         {{!-- <div class="text-dark leFont formatHelp-b"> --}}
           <!-- temporarily removed the "id="story-text" will add back in once layout is done -->
 
           objects go here
 
-            
-      </div>
+
+          {{!--
+        </div> --}}
 
       </div>
-
-
-      
     </div>
+  </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qs/6.9.2/qs.min.js"
-      integrity="sha256-TDxXjkAUay70ae/QJBEpGKkpVslXaHHayklIVglFRT4=" crossorigin="anonymous"></script>
-    <script src="/socket.io/socket.io.js"></script>
-      <script src="/js/index.js"></script>
-      <script src="/js/style.js"></script>
-  </body>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qs/6.9.2/qs.min.js"
+    integrity="sha256-TDxXjkAUay70ae/QJBEpGKkpVslXaHHayklIVglFRT4=" crossorigin="anonymous"></script>
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="/js/index.js"></script>
+  <script src="/js/style.js"></script>
+</body>
