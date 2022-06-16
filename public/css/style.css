@@ -41,6 +41,10 @@ li {
   margin-top: 200px;
 }
 
+.inlinedatshit{
+  display: inline;
+}
+
 /*  ---------- Jumbotrons  ---------- */
 .jumbotron {
   color: white;
@@ -58,9 +62,9 @@ li {
   background-image: url("../images/chairbooks.jpeg");
 }
 
-/* #jumbo-main {
+#jumbo-main {
   background-image: url("../images/desk_book.jpg");
-} */
+}
 
 /* ---------- Fonts ---------- */
 .leFont {
@@ -117,12 +121,11 @@ li {
   position: absolute;
 }
 
-/* .chat-form-container {
+.chat-form-container {
   position: absolute;
-  /* left: 140px;
-  margin-bottom: 100px;
-  width: 100%; */
-
+  left: 140px;
+  width: 100%;
+}
 
 #chat-box-height {
   height: 475px;
@@ -152,6 +155,7 @@ li {
 #story-text {
   width: 300px;
   height: 500px;
+  color:black
 }
 
 div.card.chatbox {
@@ -171,32 +175,32 @@ form#msg {
 
 /* ---------- Media Query ---------- */
 
-@media screen and (min-width: 360px) {
+/* @media screen and (min-width: 360px) {
   .jumbotron {
-    color: white;
-    /* background-position: center;
+    color: white; 
+    background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
-    height: 100vh; */
-  }
-  #jumbo-main {
+    height: 100vh; 
+  } 
+   #jumbo-main {
     background-image: url("../images/largebook.jpeg");
     grid-template-columns: auto;
-
   }
+
   .book-container {
     position: relative;
-    /* left: 425px; */
+    left: 425px;
     width: 100px;
-    /* top: 150px; */
+    top: 150px;
   }
   .chat-box-height {
     height: 105px;
   }
 
-}
+} */
 
-@media screen and (min-width: 576px) {
+/* @media screen and (min-width: 576px) {
   .jumbotron {
     color: white;
     background-position: center;
@@ -207,9 +211,9 @@ form#msg {
   #jumbo-main {
     background-image: url("../images/largebook.jpeg");
   }
-}
+} */
 
-@media screen and (min-width: 768px) {
+/* @media screen and (min-width: 768px) {
   .jumbotron {
     color: white;
     background-position: center;
@@ -220,9 +224,9 @@ form#msg {
   #jumbo-main {
     background-image: url("../images/desk_book.jpg");
   }
-}
+} */
 
-@media screen and (min-width: 992px) {
+/* @media screen and (min-width: 992px) {
   .jumbotron {
     color: white;
     background-position: center;
@@ -233,23 +237,23 @@ form#msg {
   #jumbo-main {
     background-image: url("../images/desk_book.jpg");
   }
-}
+} */
 
-@media screen and (min-width: 1200px) {
+/* @media screen and (min-width: 1200px) {
   #jumbo-main {
     background-image: url("../images/desk_book.jpg");
   }
-}
+} */
 
-@media screen and (min-width: 1400px) {
+/* @media screen and (min-width: 1400px) {
   #jumbo-main {
     background-image: url("../images/desk_book.jpg");
   }
-}
+} */
 
 
 
 /* ---------- Format help for creating the layout ---------- */
-/* .formatHelp {
+.formatHelp {
   border: 3px solid red;
-} */
+}

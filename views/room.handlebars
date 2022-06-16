@@ -1,9 +1,9 @@
 
-<body class="jumbotron container formatHelp" id="jumbo-main">
+<body class="jumbotron container-fluid formatHelp" id="jumbo-main">
   {{!-- game-status-display box --}}
-  <section id = "game-status-display">
+  <section class="inlinedatshit formatHelp" id = "game-status-display">
     {{!-- lobby name will get inserted with js --}}
-    <h3 id ="library-name" ></h3>
+    <h3 class="formatHelp" id ="library-name" ></h3>
     {{!-- player names will be inserted with js --}}
     <ul id = "player-list">
     </ul>
@@ -15,8 +15,8 @@
     <div class="container-fluid no-padding">
       <div class="row">
       <div
-        class="card chatbox text-center text-dark mainFont col-sm-4 position-absolute top-4 start-0 formatHelp overflow-auto">
-        <div class="card-body chat-container formatHelp">
+        class="card chatbox text-center container-fluid text-dark mainFont col-sm-4 position-sticky top-0 start-0 formatHelp overflow-auto">
+        <div class=" chat-container formatHelp">
           <h2 class="text-center formatHelp">Spin Your Tale!</h2>
           <h5 class="card-title chat-header formatHelp">Room Name</h5>
           <p class="formatHelp ">Welcome</p>
@@ -25,15 +25,17 @@
         </div>
         <!-- <div class="chat-form-container ms-5 formatHelp" style="width: 45%"> -->
         
-          <form class="formatHelp container-fluid" id="chat-form">
+          <form class="formatHelp container-fluid d-flex p-2 flex-column" id="chat-form">
             <input class="container-fluid" id="msg" type="text" placeholder="Type a Message" required autocomplete="off" />
             <button class="btn sml btn-secondary" id="submitBtn">Submit</button>
           </form>
         <!-- </div> -->
       </div>
       <!---------------Book--------------->
-      <div class="col-sm-3 p-0 book-container ">
-        <div class="card-body text-center content leFont container-fluid formatHelp overflow-auto bg-transparent m-0 border-0" id="story-text">
+
+      <div class="col-sm-3 p-0 book-container position-absolute formatHelp container-fluid">
+        <div class="text-dark leFont formatHelp">
+          <!-- temporarily removed the "id="story-text" will add back in once layout is done -->
             The pain itself is the love of the pain, the main ecological
             problems, but I give this kind of time to fall down, so that some
             great pain and pain. In order that for the most part, any one of us
