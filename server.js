@@ -251,18 +251,22 @@ io.on('connection', (socket) => {
 
   // this listener listens for when a user disconnects from a room
   socket.on('disconnect', () => {
-    getUserRooms(socket).forEach((room) => {
-      // sends a custom socket event to the room they left, to be dealt with by the index.js code of the other users
-      socket.to(room).emit('user-disconnected', rooms[room].users[socket.id]);
-      // deletes their socket id key from the users object of that room
-      delete rooms[room].users[socket.id];
-      console.log(rooms[room].users);
-      // if the room has 0 clients left connected to it, it will set a timeout that will delete the room from our rooms object after 30 seconds.
-      if (Object.keys(rooms[room].users).length === 0) {
-        roomKillTimer(room);
-      }
-      updateAllPlayersInRoom(room, socket);
-    });
+    try {
+      getUserRooms(socket).forEach((room) => {
+        // sends a custom socket event to the room they left, to be dealt with by the index.js code of the other users
+        socket.to(room).emit('user-disconnected', rooms[room].users[socket.id]);
+        // deletes their socket id key from the users object of that room
+        delete rooms[room].users[socket.id];
+        console.log(rooms[room].users);
+        // if the room has 0 clients left connected to it, it will set a timeout that will delete the room from our rooms object after 30 seconds.
+        if (Object.keys(rooms[room].users).length === 0) {
+          roomKillTimer(room);
+        }
+        updateAllPlayersInRoom(room, socket);
+      });
+    } catch (err) {
+      console.log(err);
+    }
   });
 });
 // called within the socket "disconnect" listener to retrieve the room that the client was in
