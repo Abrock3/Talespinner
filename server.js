@@ -35,42 +35,42 @@ const SequelizeStore = require('connect-session-sequelize')(session.Store);
 const sequelize = require('./config/connection');
 
 // //cookies middle
-const sess = {
-  secret: 'Super secret secret',
-  cookie: {},
-  resave: false,
-  saveUninitialized: true,
-  // Sets up session store
-  // store: new SequelizeStore({
-  //   db: sequelize,
-  // }),
-};
+// const sess = {
+//   secret: 'Super secret secret',
+//   cookie: {},
+//   resave: false,
+//   saveUninitialized: true,
+// Sets up session store
+// store: new SequelizeStore({
+//   db: sequelize,
+// }),
+// };
 
-app.use(session(sess));
+// app.use(session(sess));
 
 // rooms is the central object that will store all game information, including room names, the users inside those rooms,
 // and any game info related to those rooms
 const rooms = {
-  testRoom: {
-    cumulativeStory: `<p> Corey: Blah Blah Blah.<p>
-    <p>Erica: Nah Nah Nah.</p>
-    <p>Laura: Dah Dah Dah</p>`,
-    users: {
-      ebRk5MdnEo72Nd9gAAAX: 'Laura',
-      '4n0nhhd0JCzp1NdjAAAN': 'Erica',
-      L9UJwgk8zAwxPemQAAAR: 'Corey',
-    },
-    turnsLeft: 17,
-    gameStarted: 1,
-    nextPrompt: 'Gatling Gun',
-    playerTurn: 2,
-    turnOrder: [
-      { socketId: 'L9UJwgk8zAwxPemQAAAR', name: 'Corey' },
-      { socketId: '4n0nhhd0JCzp1NdjAAAN', name: 'Erica' },
-      { socketId: 'ebRk5MdnEo72Nd9gAAAX', name: 'Laura' },
-    ],
-    hostPlayer: { socketId: 'ebRk5MdnEo72Nd9gAAAX', name: 'Laura' },
-  },
+  // testRoom: {
+  //   cumulativeStory: `<p> Corey: Blah Blah Blah.<p>
+  //   <p>Erica: Nah Nah Nah.</p>
+  //   <p>Laura: Dah Dah Dah</p>`,
+  //   users: {
+  //     ebRk5MdnEo72Nd9gAAAX: 'Laura',
+  //     '4n0nhhd0JCzp1NdjAAAN': 'Erica',
+  //     L9UJwgk8zAwxPemQAAAR: 'Corey',
+  //   },
+  //   turnsLeft: 17,
+  //   gameStarted: 1,
+  //   nextPrompt: 'Gatling Gun',
+  //   playerTurn: 2,
+  //   turnOrder: [
+  //     { socketId: 'L9UJwgk8zAwxPemQAAAR', name: 'Corey' },
+  //     { socketId: '4n0nhhd0JCzp1NdjAAAN', name: 'Erica' },
+  //     { socketId: 'ebRk5MdnEo72Nd9gAAAX', name: 'Laura' },
+  //   ],
+  //   hostPlayer: { socketId: 'ebRk5MdnEo72Nd9gAAAX', name: 'Laura' },
+  // },
 };
 
 // res.render nests landpage.handlebars inside the main.handlebars layout and sends that to the user;
@@ -125,31 +125,34 @@ server.listen(PORT, () => {
 
 // this is a socket event listener. io.on "connection" listens for any time a client connects and executes the code in the callback
 io.on('connection', (socket) => {
-  console.log('socket.rooms on connect');
-  console.log(socket.rooms);
   // logs when a user connects
-  console.log('connected');
+  console.log(`${socket.id} connected`);
+
   // this is a socket event listener for the custom event "new-user", which is emitted by index.js when a user connects to an existent game lobby
   // room and name are both custom pieces of data that were sent by the index.js while emitting the new-user event
   // the "socket" object represents a single user, not every user (as io does)
   socket.on('new-user', (room, name) => {
     if (rooms[room]) {
       // the socket method .join() will ask socket.io to add that specific socket to the room
-      socket.join(room);
-      // adds the user's socket ID as a key to the users object (for that specific room), and then sets their chosen name as the value paired with that key
-      rooms[room].users[socket.id] = name;
-      if (Object.keys(rooms[room].hostPlayer).length === 0) {
-        rooms[room].hostPlayer = { socketId: socket.id, name: name };
+      try {
+        socket.join(room);
+        // adds the user's socket ID as a key to the users object (for that specific room), and then sets their chosen name as the value paired with that key
+        rooms[room].users[socket.id] = name;
+        if (Object.keys(rooms[room].hostPlayer).length === 0) {
+          rooms[room].hostPlayer = { socketId: socket.id, name: name };
+        }
+        console.log('rooms object');
+        console.log(rooms);
+        // the socket.io .to() method, when combined with .emit(), will send a custom message to all users that are connected to a specific room
+        // this message specifically will let all people in the room that's being joined know that there is a new user, and what their name is.
+        // index.js will handle how to deal with that information
+        socket.to(room).emit('user-connected', name);
+        updateAllPlayersInRoom(room, socket);
+      } catch (err) {
+        console.log(err);
       }
-      console.log('rooms object');
-      console.log(rooms);
-      // the socket.io .to() method, when combined with .emit(), will send a custom message to all users that are connected to a specific room
-      // this message specifically will let all people in the room that's being joined know that there is a new user, and what their name is.
-      // index.js will handle how to deal with that information
-      socket.to(room).emit('user-connected', name);
-      updateAllPlayersInRoom(room);
     } else {
-       io.to(socket.id).emit('game-does-not-exist');
+      gameDoesNotExist(socket);
     }
   });
   // another listener for a custom socket event, this one triggers when the "send-chat-message" event gets sent by a client.
@@ -158,30 +161,42 @@ io.on('connection', (socket) => {
     if (rooms[room]) {
       // sends a custom socket event "chat-message" to all members of the room that the user was in, sending the message and name as well
       // this event is paired with a listener in index.js that will deal with how to use that information
-      socket.to(room).emit('chat-message', {
-        message: message,
-        name: rooms[room].users[socket.id],
-      });
+      try {
+        socket.to(room).emit('chat-message', {
+          message: message,
+          name: rooms[room].users[socket.id],
+        });
+      } catch (err) {
+        console.log(err);
+      }
     } else {
-       io.to(socket.id).emit('game-does-not-exist');
+      gameDoesNotExist(socket);
     }
   });
   socket.on('start-game', (room, newPrompt) => {
     if (rooms[room]) {
-      rooms[room].gameStarted = 1;
-      let turnOrderArray = [];
-      for (const user in rooms[room].users) {
-        turnOrderArray.push({ socketId: user, name: rooms[room].users[user] });
+      try {
+        rooms[room].gameStarted = 1;
+        let turnOrderArray = [];
+        for (const user in rooms[room].users) {
+          turnOrderArray.push({
+            socketId: user,
+            name: rooms[room].users[user],
+          });
+        }
+        rooms[room].turnOrder = turnOrderArray;
+        rooms[room].playerTurn = Math.floor(
+          Math.random() * turnOrderArray.length
+        );
+        rooms[room].turnsLeft = 20;
+        rooms[room].nextPrompt = newPrompt;
+
+        updateAllPlayersInRoom(room, socket);
+      } catch (err) {
+        console.log(err);
       }
-      rooms[room].turnOrder = turnOrderArray;
-      rooms[room].playerTurn = Math.floor(
-        Math.random() * turnOrderArray.length
-      );
-      rooms[room].turnsLeft = 20;
-      rooms[room].nextPrompt = newPrompt;
-      updateAllPlayersInRoom(room);
     } else {
-      io.to(socket.id).emit('game-does-not-exist');
+      gameDoesNotExist(socket);
     }
   });
 
@@ -199,34 +214,38 @@ io.on('connection', (socket) => {
         gameStarted: rooms[room].gameStarted,
       });
     } else {
-       io.to(socket.id).emit('game-does-not-exist');
+      gameDoesNotExist(socket);
     }
   });
 
   socket.on('request-status-update', (room) => {
-    updateAllPlayersInRoom(room);
+    updateAllPlayersInRoom(room, socket);
   });
 
   socket.on('send-new-story-snippet', (room, story, newPrompt) => {
     if (rooms[room]) {
-      if (
-        socket.id === rooms[room].turnOrder[rooms[room].playerTurn].socketId
-      ) {
-        rooms[room].cumulativeStory += `${
-          rooms[room].users[socket.id]
-        }: ${story}<br>`;
-        rooms[room].nextPrompt = newPrompt;
-        rooms[room].turnsLeft--;
+      try {
+        if (
+          socket.id === rooms[room].turnOrder[rooms[room].playerTurn].socketId
+        ) {
+          rooms[room].cumulativeStory += `${
+            rooms[room].users[socket.id]
+          }: ${story}<br>`;
+          rooms[room].nextPrompt = newPrompt;
+          rooms[room].turnsLeft--;
 
-        if (rooms[room].playerTurn === rooms[room].turnOrder.length - 1) {
-          rooms[room].playerTurn = 0;
-        } else {
-          rooms[room].playerTurn++;
+          if (rooms[room].playerTurn === rooms[room].turnOrder.length - 1) {
+            rooms[room].playerTurn = 0;
+          } else {
+            rooms[room].playerTurn++;
+          }
+          updateAllPlayersInRoom(room, socket);
         }
-        updateAllPlayersInRoom(room);
+      } catch (err) {
+        console.log(err);
       }
     } else {
-       io.to(socket.id).emit('game-does-not-exist');
+      gameDoesNotExist(socket);
     }
   });
 
@@ -242,7 +261,7 @@ io.on('connection', (socket) => {
       if (Object.keys(rooms[room].users).length === 0) {
         roomKillTimer(room);
       }
-      updateAllPlayersInRoom(room);
+      updateAllPlayersInRoom(room, socket);
     });
   });
 });
@@ -274,20 +293,32 @@ function roomKillTimer(room) {
   }, 1000);
 }
 
-function updateAllPlayersInRoom(room) {
+function updateAllPlayersInRoom(room, socket) {
   if (rooms[room]) {
-    io.in(room).emit('game-status-update', {
-      cumulativeStory: rooms[room].cumulativeStory,
-      turnOrder: rooms[room].turnOrder,
-      gameStarted: rooms[room].gameStarted,
-      nextPrompt: rooms[room].nextPrompt,
-      playerTurn: rooms[room].playerTurn,
-      users: rooms[room].users,
-      turnsLeft: rooms[room].turnsLeft,
-      hostPlayer: rooms[room].hostPlayer,
-      gameStarted: rooms[room].gameStarted,
-    });
+    try {
+      io.in(room).emit('game-status-update', {
+        cumulativeStory: rooms[room].cumulativeStory,
+        turnOrder: rooms[room].turnOrder,
+        gameStarted: rooms[room].gameStarted,
+        nextPrompt: rooms[room].nextPrompt,
+        playerTurn: rooms[room].playerTurn,
+        users: rooms[room].users,
+        turnsLeft: rooms[room].turnsLeft,
+        hostPlayer: rooms[room].hostPlayer,
+        gameStarted: rooms[room].gameStarted,
+      });
+    } catch (err) {
+      console.log(err);
+    }
   } else {
-     io.to(socket.id).emit('game-does-not-exist');
+    gameDoesNotExist(socket);
+  }
+}
+
+function gameDoesNotExist(socket) {
+  try {
+    io.to(socket.id).emit('game-does-not-exist');
+  } catch (err) {
+    console.log(err);
   }
 }
