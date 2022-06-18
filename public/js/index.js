@@ -80,7 +80,6 @@ if (messageFormEl != null) {
   }
 
   function updateFormStatus(socket, data) {
-    console.log(data);
     if (data.hostPlayer.socketId === socket.id && data.gameStarted === 0) {
       hostPlayerSettingsFormEl.classList.remove('hidden');
       submitStoryFormEl.classList.add('hidden');
@@ -129,7 +128,8 @@ if (messageFormEl != null) {
       hostPlayerSettingsFormEl.classList.add('hidden');
       submitStoryFormEl.classList.add('hidden');
       gameStatusInfoParaEl.classList.remove('hidden');
-      gameStatusInfoParaEl.innerText = 'The game is over! I hope you had fun writing a story with your friends!';
+      gameStatusInfoParaEl.innerText =
+        'The game is over! I hope you had fun writing a story with your friends!';
     }
   });
 
