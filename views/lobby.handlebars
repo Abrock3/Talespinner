@@ -14,11 +14,11 @@
             id='createLibrary'
             type='button'
           >Create a Library</button></a>
-        <button
+        {{!-- <button
           class='btn btn-sm btn-outline-secondary'
           id='viewLibrary'
           type='button'
-        >View Previously Visited Libraries</button>
+        >View Previously Visited Libraries</button> --}}
         <form class='form-inline' id = "joinRoomForm">
           <input
           id="joinRoomInput"
@@ -68,12 +68,12 @@
       </div>
 
       <!--Recently Visited Libraries-->
-      <div
+      {{!-- <div
         class='card col-md-1 offset-md-1'
         id='history'
         style='width: 18rem; visibility: hidden'
       >
-        <div class='card-body'>
+        {{!-- <div class='card-body'>
           <h5 class='card-title text-dark'>Recently visited libraries</h5>
           <br />
           <ul class='card-text text-dark'>
@@ -82,8 +82,8 @@
           </ul>
           <!-- <a href="#" class="card-link">Card link</a>
         <a href="#" class="card-link">Another link</a> -->
-        </div>
-      </div>
+        </div> --}}
+      </div> --}}
 
       <!--Search for a Library-->
       <div
@@ -95,8 +95,7 @@
           <h5 class='card-title text-dark'>Search Results</h5>
           <br />
           <p class='card-text text-dark'>
-            anchor tag taking user to that room // or creates room with previous
-            configs
+          
           </p>
           <!-- <a href="#" class="card-link">Card link</a>
         <a href="#" class="card-link">Another link</a> -->
