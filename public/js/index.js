@@ -28,7 +28,7 @@ if (messageFormEl != null) {
   const name = prompt('What is your name?');
   appendMessage('You joined');
   // this will store the name of the room, this will get referenced by socket events
-  const roomName = window.location.pathname.replace('/', '');
+
   libraryNameEl.innerHTML = roomName;
 
   // lets the server know that there's a new user, there is a listener in server.js that will pick this up and use the information it sends

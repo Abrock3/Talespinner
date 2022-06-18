@@ -1,5 +1,8 @@
 
 <body class="jumbotron container-fluid formatHelp" id="jumbo-main">
+  <script>
+    const roomName = "{{roomName}}"
+  </script>
   {{!-- game-status-display box --}}
   <section class="inlinedatshit formatHelp w-25 bg-light" id = "game-status-display">
     {{!-- lobby name will get inserted with js --}}
@@ -8,6 +11,7 @@
     <ul id = "player-list">
     </ul>
   </section>
+
     <!---------------Input chat box--------------->
     <div>
       <div class="row">
@@ -215,6 +219,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qs/6.9.2/qs.min.js"
       integrity="sha256-TDxXjkAUay70ae/QJBEpGKkpVslXaHHayklIVglFRT4=" crossorigin="anonymous"></script>
     <script src="/socket.io/socket.io.js"></script>
-      <script src="/js/storyarrays.js"></script>
+    <script src="/js/storyarrays.js"></script>
     <script src="/js/index.js"></script>
   </body>

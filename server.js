@@ -115,7 +115,7 @@ app.get('/:room', (req, res) => {
     return res.redirect('/lobby');
   }
   // if the room exists, then the user is supplied the HTML from room.handlebars
-  res.render('room', { layout: 'main' });
+  res.render('room', { layout: 'main', roomName: req.params.room });
 });
 
 // the final step of server initialization
