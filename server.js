@@ -104,8 +104,8 @@ app.get('/:room', (req, res) => {
 });
 
 // the final step of server initialization
-server.listen(PORT, () => {
-  console.log(`Server listening on: ${PORT}`);
+sequelize.sync({ force: false }).then(() => {
+  server.listen(PORT, () => console.log('Now listening'));
 });
 
 // this is a socket event listener. io.on "connection" listens for any time a client connects and executes the code in the callback
