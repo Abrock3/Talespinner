@@ -5,51 +5,36 @@ const PORT = process.env.PORT || 3001;
 // requiring and creating the socket server
 const server = require('http').Server(app);
 const io = require('socket.io')(server);
-
 const exphbs = require('express-handlebars');
+const path = require('path');
+const session = require('express-session');
+const sequelize = require('./config/connection');
+const SequelizeStore = require('connect-session-sequelize')(session.Store);
 
-// const sess = {
-//   secret: 'Super secret secret',
-//   cookie: {},
-//   resave: false,
-//   saveUninitialized: true,
-//   store: new SequelizeStore({
-//     db: sequelize
-//   })
-// };
+const sess = {
+  secret: 'Super secret secret',
+  cookie: {},
+  resave: false,
+  saveUninitialized: true,
+  store: new SequelizeStore({
+    db: sequelize,
+  }),
+};
 
-// app.use(session(sess));
+app.use(session(sess));
 // initializing handlebars and telling JS which templating engine we're using
 const hbs = exphbs.create({});
 app.engine('handlebars', hbs.engine);
 app.set('view engine', 'handlebars');
 
 // middleware
-app.use(express.static('public'));
+app.use(express.json());
+app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.urlencoded({ extended: true }));
 
-////cookies
-
-const session = require('express-session');
-const SequelizeStore = require('connect-session-sequelize')(session.Store);
-const sequelize = require('./config/connection');
-
-// //cookies middle
-// const sess = {
-//   secret: 'Super secret secret',
-//   cookie: {},
-//   resave: false,
-//   saveUninitialized: true,
-// Sets up session store
-// store: new SequelizeStore({
-//   db: sequelize,
-// }),
-// };
-
-// app.use(session(sess));
-
 // rooms is the central object that will store all game information, including room names, the users inside those rooms,
-// and any game info related to those rooms
+// and any game info related to those rooms. The commented out section represents what a typical rooms object
+// will look like during play.
 const rooms = {
   // testRoom: {
   //   cumulativeStory: `<p> Corey: Blah Blah Blah.<p>
@@ -85,7 +70,7 @@ app.get('/login', (req, res) => {
   res.render('login', { layout: 'main' });
 });
 
-// /room is not a page, it's a route for the "lobby" page to send info when a user is attempting to create a room
+// /room is not a page, it's a route for the "lobby" page to send info to when a user is attempting to create a room
 app.post('/room', (req, res) => {
   // If the user types a room name that already exists, they'll be redirected back to /lobby to try again
   if (rooms[req.body.room] != null) {
@@ -119,8 +104,8 @@ app.get('/:room', (req, res) => {
 });
 
 // the final step of server initialization
-server.listen(PORT, () => {
-  console.log(`Server listening on: ${PORT}`);
+sequelize.sync({ force: false }).then(() => {
+  server.listen(PORT, () => console.log('Now listening'));
 });
 
 // this is a socket event listener. io.on "connection" listens for any time a client connects and executes the code in the callback
