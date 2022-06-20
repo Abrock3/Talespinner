@@ -2,6 +2,7 @@
 const express = require('express');
 const app = express();
 const PORT = process.env.PORT || 3001;
+const routes = require('./controllers');
 // requiring and creating the socket server
 const server = require('http').Server(app);
 const io = require('socket.io')(server);
@@ -10,6 +11,7 @@ const path = require('path');
 const session = require('express-session');
 const sequelize = require('./config/connection');
 const SequelizeStore = require('connect-session-sequelize')(session.Store);
+const withAuth = require('./utils/auth');
 
 const sess = {
   secret: 'Super secret secret',
@@ -31,6 +33,8 @@ app.set('view engine', 'handlebars');
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.urlencoded({ extended: true }));
+// brings in routes from the controllers folder
+app.use(routes);
 
 // rooms is the central object that will store all game information, including room names, the users inside those rooms,
 // and any game info related to those rooms. The commented out section represents what a typical rooms object
@@ -57,21 +61,45 @@ const rooms = {
   //   hostPlayer: { socketId: 'ebRk5MdnEo72Nd9gAAAX', name: 'Laura' },
   // },
 };
+// /room is not a page, it's a route for the "lobby" page to send info to when a user is attempting to create a room
+app.post('/room', withAuth, (req, res) => {
+  // If the user types a room name that already exists, they'll be redirected back to /lobby to try again
+  if (rooms[req.body.room] != null) {
+    return res.redirect('/lobby');
+  }
 
-// res.render nests landpage.handlebars inside the main.handlebars layout and sends that to the user;
-app.get('/', (req, res) => {
-  res.render('landpage', { layout: 'main' });
+  // creates a room key inside of the rooms object; the key's name is identical to the user's input. it also adds a .users object to be added to later
+  rooms[req.body.room] = {
+    cumulativeStory: '',
+    users: {},
+    turnsLeft: 20,
+    gameStarted: 0,
+    nextPrompt: ``,
+    playerTurn: 0,
+    turnOrder: [],
+    hostPlayer: {},
+  };
+  console.log('rooms');
+  console.log(rooms);
+  // this will redirect the client to the relative path of "/[their chosen room name]". This is handled below, in the "/:room" route
+  res.redirect(`/libraries/` + req.body.room);
 });
-// works similarly to the above route
-app.get('/lobby', (req, res) => {
-  res.render('lobby', { layout: 'main' });
+
+app.get('/libraries/:room', withAuth, (req, res) => {
+  // if the user attempts to manually type a URL that leads to a room that doesn't exist within the room object, they are redirected to /lobby
+  if (rooms[req.params.room] == null) {
+    return res.redirect('/lobby');
+  }
+  // if the room exists, then the user is supplied the HTML from room.handlebars
+  res.render('room', { layout: 'main', roomName: req.params.room });
 });
-app.get('/login', (req, res) => {
-  res.render('login', { layout: 'main' });
+// the final step of server initialization
+sequelize.sync({ force: false }).then(() => {
+  server.listen(PORT, () => console.log('Now listening'));
 });
 
 // /room is not a page, it's a route for the "lobby" page to send info to when a user is attempting to create a room
-app.post('/room', (req, res) => {
+app.post('/room', withAuth, (req, res) => {
   // If the user types a room name that already exists, they'll be redirected back to /lobby to try again
   if (rooms[req.body.room] != null) {
     return res.redirect('/lobby');
@@ -94,7 +122,7 @@ app.post('/room', (req, res) => {
   res.redirect(req.body.room);
 });
 
-app.get('/:room', (req, res) => {
+app.get('/:room', withAuth, (req, res) => {
   // if the user attempts to manually type a URL that leads to a room that doesn't exist within the room object, they are redirected to /lobby
   if (rooms[req.params.room] == null) {
     return res.redirect('/lobby');
@@ -102,12 +130,6 @@ app.get('/:room', (req, res) => {
   // if the room exists, then the user is supplied the HTML from room.handlebars
   res.render('room', { layout: 'main', roomName: req.params.room });
 });
-
-// the final step of server initialization
-sequelize.sync({ force: false }).then(() => {
-  server.listen(PORT, () => console.log('Now listening'));
-});
-
 // this is a socket event listener. io.on "connection" listens for any time a client connects and executes the code in the callback
 io.on('connection', (socket) => {
   // logs when a user connects
@@ -243,7 +265,8 @@ io.on('connection', (socket) => {
         // deletes their socket id key from the users object of that room
         delete rooms[room].users[socket.id];
         console.log(rooms[room].users);
-        // if the room has 0 clients left connected to it, it will set a timeout that will delete the room from our rooms object after 30 seconds.
+        // if the room has 0 clients left connected to it,
+        // it will set a timeout that will delete the room from our rooms object after 30 seconds.
         if (Object.keys(rooms[room].users).length === 0) {
           roomKillTimer(room);
         }
@@ -311,3 +334,5 @@ function gameDoesNotExist(socket) {
     console.log(err);
   }
 }
+
+module.exports = rooms;
