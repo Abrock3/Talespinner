@@ -12,6 +12,7 @@ const session = require('express-session');
 const sequelize = require('./config/connection');
 const SequelizeStore = require('connect-session-sequelize')(session.Store);
 const withAuth = require('./utils/auth');
+const { Library, User } = require('./models');
 
 const sess = {
   secret: 'Super secret secret',
@@ -85,14 +86,14 @@ app.post('/room', withAuth, (req, res) => {
   res.redirect(`/libraries/` + req.body.room);
 });
 
-app.get('/libraries/:room', withAuth, (req, res) => {
-  // if the user attempts to manually type a URL that leads to a room that doesn't exist within the room object, they are redirected to /lobby
-  if (rooms[req.params.room] == null) {
-    return res.redirect('/lobby');
-  }
-  // if the room exists, then the user is supplied the HTML from room.handlebars
-  res.render('room', { layout: 'main', roomName: req.params.room });
-});
+// app.get('/libraries/:room', withAuth, (req, res) => {
+//   // if the user attempts to manually type a URL that leads to a room that doesn't exist within the room object, they are redirected to /lobby
+//   if (rooms[req.params.room] == null) {
+//     return res.redirect('/lobby');
+//   }
+//   // if the room exists, then the user is supplied the HTML from room.handlebars
+//   res.render('room', { layout: 'main', roomName: req.params.room });
+// });
 // the final step of server initialization
 sequelize.sync({ force: false }).then(() => {
   server.listen(PORT, () => console.log('Now listening'));
@@ -105,11 +106,12 @@ app.post('/room', withAuth, (req, res) => {
     return res.redirect('/lobby');
   }
 
-  // creates a room key inside of the rooms object; the key's name is identical to the user's input. it also adds a .users object to be added to later
+  // adds a room object to the rooms object; this will be the object that will be used to control game logic
+  // and track users in that room
   rooms[req.body.room] = {
     cumulativeStory: '',
     users: {},
-    turnsLeft: 20,
+    turnsLeft: 0,
     gameStarted: 0,
     nextPrompt: ``,
     playerTurn: 0,
@@ -122,14 +124,31 @@ app.post('/room', withAuth, (req, res) => {
   res.redirect(req.body.room);
 });
 
-app.get('/:room', withAuth, (req, res) => {
-  // if the user attempts to manually type a URL that leads to a room that doesn't exist within the room object, they are redirected to /lobby
+// gets the user's username from the database and passes it into handlebars
+// handlebars will then establish their username as a variable in the client-side JS
+app.get('/libraries/:room', withAuth, async (req, res) => {
+  // if the user attempts to join a room that doesn't exist within the room object, they are redirected to /lobby
   if (rooms[req.params.room] == null) {
     return res.redirect('/lobby');
   }
-  // if the room exists, then the user is supplied the HTML from room.handlebars
-  res.render('room', { layout: 'main', roomName: req.params.room });
+  try {
+    // Find the logged in user based on the session ID
+    const userData = await User.findByPk(req.session.user_id, {
+      attributes: { exclude: ['password', 'email', 'id'] },
+    });
+
+    const user = userData.get({ plain: true });
+    console.log(user);
+    res.render('room', {
+      layout: 'main',
+      roomName: req.params.room,
+      name: user.name,
+    });
+  } catch (err) {
+    res.status(500).json(err);
+  }
 });
+
 // this is a socket event listener. io.on "connection" listens for any time a client connects and executes the code in the callback
 io.on('connection', (socket) => {
   // logs when a user connects
@@ -195,7 +214,7 @@ io.on('connection', (socket) => {
         rooms[room].playerTurn = Math.floor(
           Math.random() * turnOrderArray.length
         );
-        rooms[room].turnsLeft = 20;
+        rooms[room].turnsLeft = 10;
         rooms[room].nextPrompt = newPrompt;
 
         updateAllPlayersInRoom(room, socket);

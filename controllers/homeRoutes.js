@@ -16,8 +16,6 @@ router.get('/login', (req, res) => {
   res.render('login', { layout: 'main', logged_in: req.session.logged_in });
 });
 
-
-
 router.get('/library/:id', withAuth, async (req, res) => {
   try {
     const libraryData = await Library.findByPk(req.params.id, {
@@ -63,10 +61,9 @@ router.get('/profile', withAuth, async (req, res) => {
 router.get('/login', (req, res) => {
   // If the user is already logged in, redirect the request to another route
   if (req.session.logged_in) {
-    res.redirect('/profile');
+    res.redirect('/lobby');
     return;
   }
-
   res.render('login');
 });
 
