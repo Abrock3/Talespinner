@@ -24,7 +24,6 @@ const randomizePromptsBtnEl = document.getElementById('randomize-prompts-btn');
 // just stores the nickname that the user will use during their time on the page,
 // this gets referenced while sending socket events.
 // Preferably this will be established by an authorized username later
-const name = prompt('What is your name?');
 appendMessage('You joined');
 // this will store the name of the room, this will get referenced by socket events
 
