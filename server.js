@@ -62,6 +62,7 @@ const rooms = {
   //   hostPlayer: { socketId: 'ebRk5MdnEo72Nd9gAAAX', name: 'Laura' },
   // },
 };
+
 // /room is not a page, it's a route for the "lobby" page to send info to when a user is attempting to create a room
 app.post('/room', withAuth, (req, res) => {
   // If the user types a room name that already exists, they'll be redirected back to /lobby to try again
@@ -69,19 +70,18 @@ app.post('/room', withAuth, (req, res) => {
     return res.redirect('/lobby');
   }
 
-  // creates a room key inside of the rooms object; the key's name is identical to the user's input. it also adds a .users object to be added to later
+  // creates a room key inside of the rooms object; the key's name is identical to the user's input.
+  // it also adds a .users object to be added to later, this will be how the game logic is handled
   rooms[req.body.room] = {
     cumulativeStory: '',
     users: {},
-    turnsLeft: 20,
+    turnsLeft: 10,
     gameStarted: 0,
     nextPrompt: ``,
     playerTurn: 0,
     turnOrder: [],
     hostPlayer: {},
   };
-  console.log('rooms');
-  console.log(rooms);
   // this will redirect the client to the relative path of "/[their chosen room name]". This is handled below, in the "/:room" route
   res.redirect(`/libraries/` + req.body.room);
 });
@@ -96,7 +96,7 @@ app.post('/room', withAuth, (req, res) => {
 // });
 // the final step of server initialization
 sequelize.sync({ force: false }).then(() => {
-  server.listen(PORT, () => console.log('Now listening'));
+  server.listen(PORT, () => console.log(`Now listening on port ${PORT}`));
 });
 
 // /room is not a page, it's a route for the "lobby" page to send info to when a user is attempting to create a room
@@ -118,8 +118,7 @@ app.post('/room', withAuth, (req, res) => {
     turnOrder: [],
     hostPlayer: {},
   };
-  console.log('rooms');
-  console.log(rooms);
+
   // this will redirect the client to the relative path of "/[their chosen room name]". This is handled below, in the "/:room" route
   res.redirect(req.body.room);
 });
@@ -138,12 +137,15 @@ app.get('/libraries/:room', withAuth, async (req, res) => {
     });
 
     const user = userData.get({ plain: true });
-    console.log(user);
-    res.render('room', {
-      layout: 'main',
-      roomName: req.params.room,
-      name: user.name,
-    });
+    if (Object.values(rooms[req.params.room].users).indexOf(user.name) === -1) {
+      return res.render('room', {
+        layout: 'main',
+        roomName: req.params.room,
+        name: user.name,
+      });
+    } else {
+      return res.redirect('/lobby');
+    }
   } catch (err) {
     res.status(500).json(err);
   }
@@ -167,8 +169,7 @@ io.on('connection', (socket) => {
         if (Object.keys(rooms[room].hostPlayer).length === 0) {
           rooms[room].hostPlayer = { socketId: socket.id, name: name };
         }
-        console.log('rooms object');
-        console.log(rooms);
+
         // the socket.io .to() method, when combined with .emit(), will send a custom message to all users that are connected to a specific room
         // this message specifically will let all people in the room that's being joined know that there is a new user, and what their name is.
         // index.js will handle how to deal with that information
@@ -283,7 +284,7 @@ io.on('connection', (socket) => {
         socket.to(room).emit('user-disconnected', rooms[room].users[socket.id]);
         // deletes their socket id key from the users object of that room
         delete rooms[room].users[socket.id];
-        console.log(rooms[room].users);
+
         // if the room has 0 clients left connected to it,
         // it will set a timeout that will delete the room from our rooms object after 30 seconds.
         if (Object.keys(rooms[room].users).length === 0) {

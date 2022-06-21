@@ -39,7 +39,7 @@ function updatePlayerList(data) {
     Object.entries(data.users).forEach((e, index) => {
       const playerEl = document.createElement('li');
       playerEl.innerHTML = `Player ${index + 1}: ${e[1]}`;
-      if (data.hostPlayer.socketId === e[0] && data.gameStarted === 0) {
+      if (data.hostPlayer.name === e[1] && data.gameStarted === 0) {
         playerEl.innerHTML += ` (host)`;
       }
       playerEl.classList.add('player-name-element', 'p-1');
@@ -53,7 +53,7 @@ function updatePlayerList(data) {
         playerEl.classList.add('this-players-turn');
       }
       playerEl.classList.add('player-name-element', 'p-1');
-      if (Object.keys(data.users).indexOf(data.turnOrder[i].socketId) === -1) {
+      if (Object.values(data.users).indexOf(data.turnOrder[i].name) === -1) {
         playerEl.innerHTML += ` (currently disconnected)`;
       }
       playerListEl.append(playerEl);
@@ -66,20 +66,20 @@ function updateCumulativeStory(data) {
 }
 
 function updateFormStatus(socket, data) {
-  if (data.hostPlayer.socketId === socket.id && data.gameStarted === 0) {
+  if (data.hostPlayer.name === name && data.gameStarted === 0) {
     if (genreSpanEl.innerText === '') {
       randomizePrompts();
     }
     hostPlayerSettingsFormEl.classList.remove('hidden');
     submitStoryFormEl.classList.add('hidden');
     gameStatusInfoParaEl.classList.add('hidden');
-  } else if (data.hostPlayer.socketId !== socket.id && data.gameStarted === 0) {
+  } else if (data.hostPlayer.name !== name && data.gameStarted === 0) {
     hostPlayerSettingsFormEl.classList.add('hidden');
     submitStoryFormEl.classList.add('hidden');
     gameStatusInfoParaEl.classList.remove('hidden');
     gameStatusInfoParaEl.innerText = 'Waiting on the host to start the game...';
   } else if (
-    data.turnOrder[data.playerTurn].socketId === socket.id &&
+    data.turnOrder[data.playerTurn].name === name &&
     data.gameStarted === 1
   ) {
     hostPlayerSettingsFormEl.classList.add('hidden');
@@ -87,7 +87,7 @@ function updateFormStatus(socket, data) {
     gameStatusInfoParaEl.classList.add('hidden');
     promptDisplayEl.innerText = data.nextPrompt;
   } else if (
-    data.turnOrder[data.playerTurn].socketId !== socket.id &&
+    data.turnOrder[data.playerTurn].name !== name &&
     data.gameStarted === 1
   ) {
     hostPlayerSettingsFormEl.classList.add('hidden');

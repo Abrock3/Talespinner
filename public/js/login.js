@@ -15,7 +15,7 @@ const loginFormHandler = async (event) => {
 
     if (response.ok) {
       // If successful, redirect the browser to the profile page
-      document.location.replace('/profile');
+      document.location.replace('/lobby');
     } else {
       alert(response.statusText);
     }
@@ -28,19 +28,25 @@ const signupFormHandler = async (event) => {
   const name = document.querySelector('#name-signup').value.trim();
   const email = document.querySelector('#email-signup').value.trim();
   const password = document.querySelector('#password-signup').value.trim();
+  const confirm = document
+    .querySelector('#password-signup-confirm')
+    .value.trim();
+  if (confirm === password) {
+    if (name && email && password) {
+      const response = await fetch('/api/users', {
+        method: 'POST',
+        body: JSON.stringify({ name, email, password }),
+        headers: { 'Content-Type': 'application/json' },
+      });
 
-  if (name && email && password) {
-    const response = await fetch('/api/users', {
-      method: 'POST',
-      body: JSON.stringify({ name, email, password }),
-      headers: { 'Content-Type': 'application/json' },
-    });
-
-    if (response.ok) {
-      document.location.replace('/lobby');
-    } else {
-      alert(response.statusText);
+      if (response.ok) {
+        document.location.replace('/lobby');
+      } else {
+        alert(response.statusText);
+      }
     }
+  } else {
+    window.alert("Your passwords don't match!");
   }
 };
 
