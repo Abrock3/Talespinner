@@ -249,15 +249,13 @@ io.on('connection', (socket) => {
     updateAllPlayersInRoom(room, socket);
   });
 
-  socket.on('send-new-story-snippet', (room, story, newPrompt) => {
+  socket.on('send-new-story-snippet', (room, story, newPrompt, name) => {
     if (rooms[room]) {
       try {
-        if (
-          socket.id === rooms[room].turnOrder[rooms[room].playerTurn].socketId
-        ) {
+        if (name === rooms[room].turnOrder[rooms[room].playerTurn].name) {
           rooms[room].cumulativeStory += `${
             rooms[room].users[socket.id]
-          }: ${story}<br>`;
+          }: ${story}<br/>`;
           rooms[room].nextPrompt = newPrompt;
           rooms[room].turnsLeft--;
 

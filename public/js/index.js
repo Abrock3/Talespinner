@@ -20,7 +20,8 @@ const hostPlayerSettingsFormEl = document.getElementById(
 );
 const gameStatusInfoParaEl = document.getElementById('game-status-info');
 const randomizePromptsBtnEl = document.getElementById('randomize-prompts-btn');
-
+const storySaveBtnEl = document.getElementById('story-save-button');
+let finalStory = ``;
 // just stores the nickname that the user will use during their time on the page,
 // this gets referenced while sending socket events.
 // Preferably this will be established by an authorized username later
@@ -86,6 +87,7 @@ function updateFormStatus(socket, data) {
     submitStoryFormEl.classList.remove('hidden');
     gameStatusInfoParaEl.classList.add('hidden');
     promptDisplayEl.innerText = data.nextPrompt;
+    storyInputEl.focus();
   } else if (
     data.turnOrder[data.playerTurn].name !== name &&
     data.gameStarted === 1
@@ -113,6 +115,16 @@ socket.on('game-status-update', (data) => {
     gameStatusInfoParaEl.classList.remove('hidden');
     gameStatusInfoParaEl.innerText =
       'The game is over! I hope you had fun writing a story with your friends!';
+    let playerBool = false;
+    for (let i = 0; i < data.turnOrder.length; i++) {
+      if (data.turnOrder[i].name === name) {
+        playerBool = true;
+      }
+    }
+    if (playerBool) {
+      finalStory = data.cumulativeStory;
+      storySaveBtnEl.classList.remove('hidden');
+    }
   }
 });
 
@@ -160,7 +172,7 @@ submitStoryFormEl.addEventListener('submit', (e) => {
   const story = storyInputEl.value;
   const newPrompt = promptInputEl.value;
   // sends your chat message up to the server, where there's a listener that will decide what to do with it (most likely send it to the other people in your room)
-  socket.emit('send-new-story-snippet', roomName, story, newPrompt);
+  socket.emit('send-new-story-snippet', roomName, story, newPrompt, name);
   storyInputEl.value = '';
   promptInputEl.value = '';
 });
@@ -177,6 +189,26 @@ messageFormEl.addEventListener('submit', (e) => {
 
 randomizePromptsBtnEl.addEventListener('click', () => {
   randomizePrompts();
+});
+
+storySaveBtnEl.addEventListener('click', async () => {
+  const name = roomName;
+  const story = finalStory;
+  if (story) {
+    const response = await fetch(`/api/libraries`, {
+      method: 'POST',
+      body: JSON.stringify({ name, story }),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (response.ok) {
+      alert('Your story saved!');
+    } else {
+      alert('Your story failed to save. Sorry!');
+    }
+  }
 });
 
 hostPlayerSettingsFormEl.addEventListener('submit', (e) => {
