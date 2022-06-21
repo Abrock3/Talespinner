@@ -8,7 +8,7 @@ var createCard = document.querySelector('#create');
 var createLibraryBtn = document.querySelector('#createLibrary');
 
 // Event listeners
-
+// this toggles the visibility of the Lobby Creation card
 createLibraryBtn.addEventListener('click', function () {
   if (createCard.style.visibility !== 'visible') {
     createCard.style.visibility = 'visible';

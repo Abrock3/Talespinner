@@ -12,7 +12,7 @@ const session = require('express-session');
 const sequelize = require('./config/connection');
 const SequelizeStore = require('connect-session-sequelize')(session.Store);
 const withAuth = require('./utils/auth');
-const { Library, User } = require('./models');
+const { User } = require('./models');
 
 const sess = {
   secret: 'Super secret secret',
@@ -63,7 +63,9 @@ const rooms = {
   // },
 };
 
-// /room is not a page, it's a route for the "lobby" page to send info to when a user is attempting to create a room
+// A route for the client to send info to when a user is attempting to create a room.
+// I would have put this and other routes in the controllers folder,
+// but it needs to be able to modify the rooms object
 app.post('/room', withAuth, (req, res) => {
   // If the user types a room name that already exists, they'll be redirected back to /lobby to try again
   if (rooms[req.body.room] != null) {
@@ -84,43 +86,6 @@ app.post('/room', withAuth, (req, res) => {
   };
   // this will redirect the client to the relative path of "/[their chosen room name]". This is handled below, in the "/:room" route
   res.redirect(`/libraries/` + req.body.room);
-});
-
-// app.get('/libraries/:room', withAuth, (req, res) => {
-//   // if the user attempts to manually type a URL that leads to a room that doesn't exist within the room object, they are redirected to /lobby
-//   if (rooms[req.params.room] == null) {
-//     return res.redirect('/lobby');
-//   }
-//   // if the room exists, then the user is supplied the HTML from room.handlebars
-//   res.render('room', { layout: 'main', roomName: req.params.room });
-// });
-// the final step of server initialization
-sequelize.sync({ force: false }).then(() => {
-  server.listen(PORT, () => console.log(`Now listening on port ${PORT}`));
-});
-
-// /room is not a page, it's a route for the "lobby" page to send info to when a user is attempting to create a room
-app.post('/room', withAuth, (req, res) => {
-  // If the user types a room name that already exists, they'll be redirected back to /lobby to try again
-  if (rooms[req.body.room] != null) {
-    return res.redirect('/lobby');
-  }
-
-  // adds a room object to the rooms object; this will be the object that will be used to control game logic
-  // and track users in that room
-  rooms[req.body.room] = {
-    cumulativeStory: '',
-    users: {},
-    turnsLeft: 0,
-    gameStarted: 0,
-    nextPrompt: ``,
-    playerTurn: 0,
-    turnOrder: [],
-    hostPlayer: {},
-  };
-
-  // this will redirect the client to the relative path of "/[their chosen room name]". This is handled below, in the "/:room" route
-  res.redirect(req.body.room);
 });
 
 // gets the user's username from the database and passes it into handlebars
@@ -149,6 +114,11 @@ app.get('/libraries/:room', withAuth, async (req, res) => {
   } catch (err) {
     res.status(500).json(err);
   }
+});
+
+// the final step of server initialization
+sequelize.sync({ force: false }).then(() => {
+  server.listen(PORT, () => console.log(`Now listening on port ${PORT}`));
 });
 
 // this is a socket event listener. io.on "connection" listens for any time a client connects and executes the code in the callback
@@ -226,7 +196,7 @@ io.on('connection', (socket) => {
       gameDoesNotExist(socket);
     }
   });
-
+  // updates a specific client's game info, if they navigated away and came back
   socket.on('update-my-game-info', (room) => {
     if (rooms[room]) {
       io.to(socket.id).emit('game-status-update', {
@@ -245,10 +215,14 @@ io.on('connection', (socket) => {
     }
   });
 
+  // this is the standard socket event listener for whenever the game has changed in some way
+  // for example, if a user joins, their client will send this event to the server, and this will catch
+  // it and send an update request back to all clients in the game lobby
   socket.on('request-status-update', (room) => {
     updateAllPlayersInRoom(room, socket);
   });
 
+  // this is the custom event listener that listens for when a player finishes their turn
   socket.on('send-new-story-snippet', (room, story, newPrompt, name) => {
     if (rooms[room]) {
       try {
@@ -295,6 +269,7 @@ io.on('connection', (socket) => {
     }
   });
 });
+
 // called within the socket "disconnect" listener to retrieve the room that the client was in
 function getUserRooms(socket) {
   return Object.entries(rooms).reduce((names, [name, room]) => {
@@ -302,6 +277,8 @@ function getUserRooms(socket) {
     return names;
   }, []);
 }
+// if a game lobby is empty, this will use an interval to periodically check whether the room is still empty;
+// if after 30 seconds no one has connected, it will be destroyed. If someone connects, it will end the interval
 function roomKillTimer(room) {
   console.log(
     `The room "${room}" will be deleted after 30 seconds with no connection.`
@@ -323,7 +300,10 @@ function roomKillTimer(room) {
   }, 1000);
 }
 
+// this function will send a "game-status-update" socket event to all players in a room, which
+// sends all necessary game information to the users, to be dealt with by the client-side js
 function updateAllPlayersInRoom(room, socket) {
+  // error handling in case someone somehow accesses a room while it doesn't exist
   if (rooms[room]) {
     try {
       io.in(room).emit('game-status-update', {
@@ -345,6 +325,8 @@ function updateAllPlayersInRoom(room, socket) {
   }
 }
 
+// this will notify a user that a game no longer exists if they, for example, lose their internet connection,
+// return later and try to resume playing the game in the same room (after the room has been destroyed)
 function gameDoesNotExist(socket) {
   try {
     io.to(socket.id).emit('game-does-not-exist');
@@ -352,5 +334,3 @@ function gameDoesNotExist(socket) {
     console.log(err);
   }
 }
-
-module.exports = rooms;

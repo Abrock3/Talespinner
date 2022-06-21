@@ -1,44 +1,21 @@
 const router = require('express').Router();
 const { Library, User } = require('../models');
 const withAuth = require('../utils/auth');
-let rooms = require('../server.js');
 
 router.get('/', async (req, res) => {
-  // Pass session flag into template
-  res.render('landpage', { layout: 'main', logged_in: req.session.logged_in });
+  res.render('landpage', { layout: 'main' });
 });
 
-// works similarly to the above route
+// works similarly to the above route, but passes in whether the user is logged in
 router.get('/lobby', (req, res) => {
   res.render('lobby', { layout: 'main', logged_in: req.session.logged_in });
 });
+
 router.get('/login', (req, res) => {
   res.render('login', { layout: 'main', logged_in: req.session.logged_in });
 });
 
-router.get('/library/:id', withAuth, async (req, res) => {
-  try {
-    const libraryData = await Library.findByPk(req.params.id, {
-      include: [
-        {
-          model: User,
-          attributes: ['name'],
-        },
-      ],
-    });
-
-    const library = libraryData.get({ plain: true });
-
-    res.render('library', {
-      ...library,
-      logged_in: req.session.logged_in,
-    });
-  } catch (err) {
-    res.status(500).json(err);
-  }
-});
-
-// Use withAuth middleware to prevent access to route
+// Use withAuth middleware to prevent access to route if the user isn't logged in
 router.get('/profile', withAuth, async (req, res) => {
   try {
     // Find the logged in user based on the session ID
