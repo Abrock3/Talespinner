@@ -64,6 +64,7 @@ function updatePlayerList(data) {
 
 // this uses data from the server to update the story so far
 function updateCumulativeStory(data) {
+  storyTextEl.innerHTML = '';
   const storyElement = document.createElement('p');
   storyElement.style.whiteSpace = 'pre-line';
   storyElement.innerText = data.cumulativeStory;
