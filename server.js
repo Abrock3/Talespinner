@@ -227,11 +227,11 @@ io.on('connection', (socket) => {
     if (rooms[room]) {
       try {
         if (name === rooms[room].turnOrder[rooms[room].playerTurn].name) {
+          rooms[room].turnsLeft--;
           rooms[room].cumulativeStory += `${
             rooms[room].users[socket.id]
-          }: ${story}<br/>`;
+          }: ${story}\n`;
           rooms[room].nextPrompt = newPrompt;
-          rooms[room].turnsLeft--;
 
           if (rooms[room].playerTurn === rooms[room].turnOrder.length - 1) {
             rooms[room].playerTurn = 0;

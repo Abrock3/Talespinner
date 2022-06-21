@@ -64,7 +64,15 @@ function updatePlayerList(data) {
 
 // this uses data from the server to update the story so far
 function updateCumulativeStory(data) {
-  storyTextEl.innerHTML = data.cumulativeStory;
+  const storyElement = document.createElement('p');
+  storyElement.style.whiteSpace = 'pre-line';
+  storyElement.innerText = data.cumulativeStory;
+  storyTextEl.append(storyElement);
+  storyElement.scrollIntoView({
+    behavior: 'smooth',
+    block: 'end',
+    inline: 'nearest',
+  });
 }
 
 // based on the state of the game (whether the game is started, if you're the host, or if it's your turn)
@@ -169,6 +177,13 @@ function appendMessage(message) {
   const messageElement = document.createElement('li');
   messageElement.innerText = message;
   messageContainerEl.append(messageElement);
+  console.log('we here');
+  console.log(messageContainerEl.innerHTML);
+  messageElement.scrollIntoView({
+    behavior: 'smooth',
+    block: 'end',
+    inline: 'nearest',
+  });
 }
 
 // presents the host player with randomized prompts to start the game with
