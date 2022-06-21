@@ -154,7 +154,7 @@ li {
 
 /*  ---------- Chat Box ---------- */
 .chat-container {
-  max-height: 50vh;
+  height: 50vh;
 }
 #chatCont {
   margin-left: 5%;
@@ -175,7 +175,7 @@ li {
 }
 
 ul#chat-container {
-  max-height: 40vh;
+  height: 40vh;
   overflow-y: auto;
 }
 
