@@ -177,13 +177,18 @@ function appendMessage(message) {
   const messageElement = document.createElement('li');
   messageElement.innerText = message;
   messageContainerEl.append(messageElement);
-  console.log('we here');
-  console.log(messageContainerEl.innerHTML);
-  messageElement.scrollIntoView({
-    behavior: 'smooth',
-    block: 'end',
-    inline: 'nearest',
-  });
+  if (
+    messageContainerEl.scrollHeight -
+      messageContainerEl.scrollTop -
+      messageContainerEl.clientHeight <
+    200
+  ) {
+    messageElement.scrollIntoView({
+      behavior: 'smooth',
+      block: 'end',
+      inline: 'nearest',
+    });
+  }
 }
 
 // presents the host player with randomized prompts to start the game with
