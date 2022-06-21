@@ -22,18 +22,18 @@ const gameStatusInfoParaEl = document.getElementById('game-status-info');
 const randomizePromptsBtnEl = document.getElementById('randomize-prompts-btn');
 const storySaveBtnEl = document.getElementById('story-save-button');
 let finalStory = ``;
-// just stores the nickname that the user will use during their time on the page,
-// this gets referenced while sending socket events.
-// Preferably this will be established by an authorized username later
+// displays that you joined in the chat box
 appendMessage('You joined');
-// this will store the name of the room, this will get referenced by socket events
 
+// sets the title of the library to the room's name
 libraryNameEl.innerHTML = roomName;
 
 // lets the server know that there's a new user,
 // there is a listener in server.js that will pick this up and update the other users
 socket.emit('new-user', roomName, name);
 
+// this is one of several functions that updates elements on the page
+// this one uses data obtained from the server using socket.io to update the current list of players that are in the room
 function updatePlayerList(data) {
   playerListEl.innerHTML = '';
   if (data.gameStarted === 0) {
@@ -62,11 +62,15 @@ function updatePlayerList(data) {
   }
 }
 
+// this uses data from the server to update the story so far
 function updateCumulativeStory(data) {
   storyTextEl.innerHTML = data.cumulativeStory;
 }
 
-function updateFormStatus(socket, data) {
+// based on the state of the game (whether the game is started, if you're the host, or if it's your turn)
+// this will make elements visible or invisible to allow the correct player to start the game, take their turn, or
+// update them on what's going on at that moment
+function updateFormStatus(data) {
   if (data.hostPlayer.name === name && data.gameStarted === 0) {
     if (genreSpanEl.innerText === '') {
       randomizePrompts();
@@ -101,20 +105,27 @@ function updateFormStatus(socket, data) {
   }
 }
 
-function fullGameStatusUpdate(socket, data) {
+// this wraps up all of the functions into one; preferably later I'll make more specific socket events so less
+// information is getting passed between server and client with each action
+function fullGameStatusUpdate(data) {
   updatePlayerList(data);
   updateCumulativeStory(data);
-  updateFormStatus(socket, data);
+  updateFormStatus(data);
 }
 
+// this is a socket event listener that listens for a custom event from the server. On receiving that event,
+// it will use the data passed in to update the entire page for each person
 socket.on('game-status-update', (data) => {
-  fullGameStatusUpdate(socket, data);
+  fullGameStatusUpdate(data);
   if (data.turnsLeft === 0) {
     hostPlayerSettingsFormEl.classList.add('hidden');
     submitStoryFormEl.classList.add('hidden');
     gameStatusInfoParaEl.classList.remove('hidden');
     gameStatusInfoParaEl.innerText =
       'The game is over! I hope you had fun writing a story with your friends!';
+    // this determines if the user is one of the "players", and if so allows them to save the story
+    // players get locked in when the game starts, so others can watch but can't save the story if they
+    // weren't a player
     let playerBool = false;
     for (let i = 0; i < data.turnOrder.length; i++) {
       if (data.turnOrder[i].name === name) {
@@ -128,6 +139,9 @@ socket.on('game-status-update', (data) => {
   }
 });
 
+// if a client gets disconnected for long periods of time, the game lobby may get shut down
+// after 30 seconds without a user connected any room will be destroyed. If a user reconnects while their client
+// is still in a lobby, this event gets displayed to them
 socket.on('game-does-not-exist', () => {
   hostPlayerSettingsFormEl.classList.add('hidden');
   submitStoryFormEl.classList.add('hidden');
@@ -167,6 +181,9 @@ function randomizePrompts() {
     characters[Math.floor(Math.random() * characters.length)];
 }
 
+// This collects the story the user wrote and the prompt they submitted and sends them to the server
+// the server will update the cumulative story, the turn, and the prompt in the central rooms object
+// and then that information will be sent back to all members of this room
 submitStoryFormEl.addEventListener('submit', (e) => {
   e.preventDefault();
   const story = storyInputEl.value;
@@ -187,10 +204,13 @@ messageFormEl.addEventListener('submit', (e) => {
   messageInputEl.value = '';
 });
 
+// gives the host player the ability to randomize prompts from preset arrays if they wish
 randomizePromptsBtnEl.addEventListener('click', () => {
   randomizePrompts();
 });
 
+// this allows the user to permanently save a story after it's complete, in a server side db.
+// this can be accessed in their profile
 storySaveBtnEl.addEventListener('click', async () => {
   const name = roomName;
   const story = finalStory;
@@ -211,6 +231,7 @@ storySaveBtnEl.addEventListener('click', async () => {
   }
 });
 
+// collects the "settings" the host player selected and uses them to start the game with a socket event
 hostPlayerSettingsFormEl.addEventListener('submit', (e) => {
   e.preventDefault();
   const newPrompt = `Genre: ${genreSpanEl.innerText}
@@ -220,6 +241,8 @@ hostPlayerSettingsFormEl.addEventListener('submit', (e) => {
   socket.emit('start-game', roomName, newPrompt);
 });
 
+// I wasn't sure exactly how the page would do if a user navigated to another tab while playing;
+// when the user navigates back, this will request a full game update from the server
 window.addEventListener('focus', function () {
   socket.emit('update-my-game-info', roomName);
 });

@@ -1,3 +1,5 @@
+// a group of arrays that are pulled from while randomizing prompts at the beginning of the game
+
 const genres = [
   'Horror/Supernatural',
   'Romance',

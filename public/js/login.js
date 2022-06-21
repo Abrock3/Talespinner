@@ -22,6 +22,7 @@ const loginFormHandler = async (event) => {
   }
 };
 
+// collects info from the signup form and uses it to POST a new user creation request to the server
 const signupFormHandler = async (event) => {
   event.preventDefault();
 
@@ -31,6 +32,7 @@ const signupFormHandler = async (event) => {
   const confirm = document
     .querySelector('#password-signup-confirm')
     .value.trim();
+    // determines that the passwords match
   if (confirm === password) {
     if (name && email && password) {
       const response = await fetch('/api/users', {
