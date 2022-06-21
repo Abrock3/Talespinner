@@ -1,101 +1,75 @@
-
 <body class="jumbotron container-fluid formatHelp" id="jumbo-main">
-  {{!-- makes the name of the room accessible to the client-side js --}}
+  {{!-- makes the name of the room and the username accessible to the client-side js --}}
   <script>
     const roomName = "{{roomName}}";
-      const name = "{{name}}";
+    const name = "{{name}}";
   </script>
   {{!-- game-status-display box --}}
-  <section class="inlinedatshit formatHelp w-25 bg-light" id = "game-status-display">
+  <section class="inlinedatshit formatHelp w-25 bg-light" id="game-status-display">
     {{!-- lobby name will get inserted with js --}}
-    <h3 class="formatHelp" id ="library-name"></h3>
+    <h3 class="formatHelp" id="library-name"></h3>
     {{!-- player names will be inserted with js --}}
-    <ul id = "player-list">
-    </ul>
-  </section>
-
-    <!---------------Input chat box--------------->
-    <div>
-      <div class="row topMargin">
-        <div
-        class="card text-center mainFont  position-sticky formatHelp" id="chatCont">
+    <ul id="player-list">
+   </ul>
+  </section>            
+  <div>
+    <div class="row topMargin">
+      <div class="card text-center mainFont  position-sticky formatHelp" id="chatCont">
         <div class=" chat-container formatHelp">
           <h5 class="card-title chat-header formatHelp text-left">Chat With Your Co-Writers</h5>
-          <ul class="card-text chat-main chat-messages mainFont formatHelp-b dyn-height text-left" id ="chat-container"></ul>
+          <ul class="card-text chat-main chat-messages mainFont formatHelp-b dyn-height text-left" id="chat-container">
+          </ul>
         </div>
-          <form class="formatHelp container-fluid d-flex p-2 flex-column" id="chat-form">
-            <input class="container-fluid" id="msg" type="text" placeholder="Type a Message" required autocomplete="off" />
-            <button class="btn sml btn-secondary" id="submitBtn">Submit</button>
-          </form>
+        <form class="formatHelp container-fluid d-flex p-2 flex-column" id="chat-form">
+          <input class="container-fluid" id="msg" type="text" placeholder="Type a Message" required
+            autocomplete="off" />
+          <button class="btn sml btn-secondary" id="submitBtn">Submit</button>
+        </form>
       </div>
-      </div>
-      </div>
-      <!---------------Book--------------->
-      <div class="leFont book-container position-absolute container-fluid dyn-height" id="user-text">   </div>
-       <div class="leFont book-container position-absolute container-fluid" id="prompt">
-        {{!-- <div class="text-dark leFont formatHelp-b"> --}}
-          <!-- temporarily removed the "id="story-text" will add back in once layout is done -->
-            <h5 id = "game-status-info" class = "hidden"></h5>
-            <form id='submit-story-form' class = "hidden">
-              <h5>Write the next line of the story, and make sure to include the following prompt!</h5>
-              <p id="prompt-text"></p>
-              <input
-              class='form-control mr-sm-2'
-              type='text'
-              id='story-text-input'
-              name='storyText'
-              placeholder='Continue the story using the prompt...'
-              aria-label='Write the next line of the story'
-              autocomplete="off"
-              required
-              /><br/>
+    </div>
+  </div>
+  <div class="leFont book-container position-absolute container-fluid dyn-height" id="user-text"> </div>
+ 
+  <div class="leFont book-container position-absolute container-fluid" id="prompt">
+      <h5 id="game-status-info" class="hidden"></h5>
+       <button class="btn btn-success text-light hidden" id = "story-save-button" type="button">Save Your Story!</button>
+      <form id='submit-story-form' class="hidden">
+        <h5>Write the next line of the story, and make sure to include the following prompt!</h5>
+        <p id="prompt-text"></p>
+        <input class='form-control mr-sm-2' type='text' id='story-text-input' name='storyText'
+          placeholder='Continue the story using the prompt...' aria-label='Write the next line of the story'
+          autocomplete="off" required /><br />
+        <h5>Next, write a single person, item, or location that the next player will have to include in their story!
+        </h5>
+        <input class='form-control mr-sm-2' type='text' id='prompt-input' name='promptInput'
+          placeholder='Type a prompt, like "a wand", or "Dracula"...' aria-label='Type a prompt!' autocomplete="off"
+          required />
+        <br />
+        <button class='btn btn-outline-secondary bg-dark text-light my-2 my-sm-0' id='promptSubmitBtn'
+          type='submit'>Write it!</button>
+      </form>
 
-              <h5>Next, write a single person, item, or location that the next player will have to include in their story!</h5>
-              <input
-              class='form-control mr-sm-2'
-              type='text'
-              id='prompt-input'
-              name='promptInput'
-              placeholder='Type a prompt, like "a wand", or "Dracula"...'
-              aria-label='Type a prompt!'
-              autocomplete="off"
-              required
-            />
-            <br />
-            <button
-              class='btn btn-outline-secondary bg-dark text-light my-2 my-sm-0'
-              id='promptSubmitBtn'
-              type='submit'
-            >Write it!</button>
-            </form>
-
-            <form id='host-player-settings-form' class = "hidden">
-              <h5>Genre: <span id="genre-span"></span></h5>
-              <br/>
-              <h5>Setting: <span id="setting-span"></span></h5>
-              <br/>
-              <h5>Object: <span id="object-span"></span></h5>
-              <br/>
-              <h5>Character: <span id="character-span"></span></h5>
-                  <br/>
-              <button
-              class='btn btn-outline-secondary bg-dark text-light my-2 my-sm-0'
-              id='randomize-prompts-btn'
-              type='button'
-            >Randomize prompts</button>
-            <br/>
-            <br />
-            <button
-              class='btn btn-outline-secondary bg-dark text-light my-2 my-sm-0'
-              id='submit-prompts-btn'
-              type='submit'
-            >Start game with these prompts!</button></form>
-            </form>
-         </div>
-      </div>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qs/6.9.2/qs.min.js"
-      integrity="sha256-TDxXjkAUay70ae/QJBEpGKkpVslXaHHayklIVglFRT4=" crossorigin="anonymous"></script>
-    <script src="/socket.io/socket.io.js"></script>
-    <script src="/js/storyarrays.js"></script>
-    <script src="/js/index.js"></script>
-  </body>
+      <form id='host-player-settings-form' class="hidden">
+        <h5>Genre: <span id="genre-span"></span></h5>
+        <br />
+        <h5>Setting: <span id="setting-span"></span></h5>
+        <br />
+        <h5>Object: <span id="object-span"></span></h5>
+        <br />
+        <h5>Character: <span id="character-span"></span></h5>
+        <br />
+        <button class='btn btn-outline-secondary bg-dark text-light my-2 my-sm-0' id='randomize-prompts-btn'
+          type='button'>Randomize prompts</button>
+        <br />
+        <br />
+        <button class='btn btn-outline-secondary bg-dark text-light my-2 my-sm-0' id='submit-prompts-btn'
+          type='submit'>Start game with these prompts!</button>
+      </form>
+    </div>
+  </div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qs/6.9.2/qs.min.js"
+    integrity="sha256-TDxXjkAUay70ae/QJBEpGKkpVslXaHHayklIVglFRT4=" crossorigin="anonymous"></script>
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="/js/storyarrays.js"></script>
+  <script src="/js/index.js"></script>
+</body>
