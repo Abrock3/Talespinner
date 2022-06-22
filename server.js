@@ -84,6 +84,7 @@ app.post('/room', withAuth, (req, res) => {
     turnOrder: [],
     hostPlayer: {},
   };
+  console.log(`Room created: ${req.body.room}`);
   // this will redirect the client to the relative path of "/[their chosen room name]". This is handled below, in the "/:room" route
   res.redirect(`/libraries/` + req.body.room);
 });
@@ -92,7 +93,11 @@ app.post('/room', withAuth, (req, res) => {
 // handlebars will then establish their username as a variable in the client-side JS
 app.get('/libraries/:room', withAuth, async (req, res) => {
   // if the user attempts to join a room that doesn't exist within the room object, they are redirected to /lobby
-  if (rooms[req.params.room] == null) {
+  // also, if there are 6 people in a room already the user will be redirected to the lobby
+  if (
+    rooms[req.params.room] == null ||
+    Object.keys(rooms[req.params.room].users).length >= 6
+  ) {
     return res.redirect('/lobby');
   }
   try {
@@ -100,9 +105,9 @@ app.get('/libraries/:room', withAuth, async (req, res) => {
     const userData = await User.findByPk(req.session.user_id, {
       attributes: { exclude: ['password', 'email', 'id'] },
     });
-
     const user = userData.get({ plain: true });
-    if (Object.values(rooms[req.params.room].users).indexOf(user.name) === -1) {
+    // prevents a user from using multiple tabs to enter the same room multiple times
+    if (!Object.values(rooms[req.params.room].users).includes(user.name)) {
       return res.render('room', {
         layout: 'main',
         roomName: req.params.room,
@@ -127,7 +132,7 @@ io.on('connection', (socket) => {
   console.log(`${socket.id} connected`);
 
   // this is a socket event listener for the custom event "new-user", which is emitted by index.js when a user connects to an existent game lobby
-  // room and name are both custom pieces of data that were sent by the index.js while emitting the new-user event
+  // room and name are both custom pieces of data that were sent by index.js while emitting the new-user event
   // the "socket" object represents a single user, not every user (as io does)
   socket.on('new-user', (room, name) => {
     if (rooms[room]) {
@@ -334,3 +339,50 @@ function gameDoesNotExist(socket) {
     console.log(err);
   }
 }
+// If for some reason our logic misses the destruction of a room, this will check hourly to make sure
+// that every room in the rooms object is also in the io object. If it's not, that means it shouldn't exist;
+// we'll set an interval to check for 30 seconds whether it's still not in the object (maybe the client needed to reconnect)
+// if it doesn't appear in the socket.io list of rooms again, then it will be destroyed in 30 seconds
+// commenting this out until I do more research on how this will work on heroku
+// function roomSweep() {
+//   try {
+//     let roomSweepInterval = setInterval(() => {
+//       if (Object.keys(rooms).length) {
+//         console.log('Sweep starting');
+//         let socketRoomArr = [];
+//         Array.from(io.sockets.adapter.rooms).forEach((room) => {
+//           socketRoomArr.push(room[0]);
+//         });
+//         console.log(socketRoomArr);
+//         console.log(Object.keys(rooms));
+//         Object.keys(rooms).forEach((room) => {
+//           if (!socketRoomArr.includes(room)) {
+//             console.log(
+//               `The room "${room}" has been identified to be persisting with no users in it. It will be deleted after 30 seconds with no connection.`
+//             );
+//             let roomKillInterval = setInterval(() => {
+//               seconds++;
+//               if (socketRoomArr.includes(room)) {
+//                 console.log(
+//                   `The room "${room}" will not be deleted, as it was found in the rooms object again.`
+//                 );
+//                 clearInterval(roomKillInterval);
+//               }
+//               if (seconds >= 29) {
+//                 delete rooms[room];
+//                 console.log(
+//                   `The room "${room}" has been deleted as part of the room sweep.`
+//                 );
+//                 clearInterval(roomKillInterval);
+//               }
+//             }, 1000);
+//           }
+//         });
+//       }
+//     }, 86400000);
+//   } catch (err) {
+//     console.log(err);
+//   }
+// }
+
+// roomSweep();
