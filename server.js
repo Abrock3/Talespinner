@@ -41,26 +41,26 @@ app.use(routes);
 // and any game info related to those rooms. The commented out section represents what a typical rooms object
 // will look like during play.
 const rooms = {
-  // testRoom: {
-  //   cumulativeStory: `<p> Corey: Blah Blah Blah.<p>
-  //   <p>Erica: Nah Nah Nah.</p>
-  //   <p>Laura: Dah Dah Dah</p>`,
-  //   users: {
-  //     ebRk5MdnEo72Nd9gAAAX: 'Laura',
-  //     '4n0nhhd0JCzp1NdjAAAN': 'Erica',
-  //     L9UJwgk8zAwxPemQAAAR: 'Corey',
-  //   },
-  //   turnsLeft: 17,
-  //   gameStarted: 1,
-  //   nextPrompt: 'Gatling Gun',
-  //   playerTurn: 2,
-  //   turnOrder: [
-  //     { socketId: 'L9UJwgk8zAwxPemQAAAR', name: 'Corey' },
-  //     { socketId: '4n0nhhd0JCzp1NdjAAAN', name: 'Erica' },
-  //     { socketId: 'ebRk5MdnEo72Nd9gAAAX', name: 'Laura' },
-  //   ],
-  //   hostPlayer: { socketId: 'ebRk5MdnEo72Nd9gAAAX', name: 'Laura' },
-  // },
+  testRoom: {
+    cumulativeStory: `<p> Corey: Blah Blah Blah.<p>
+    <p>Erica: Nah Nah Nah.</p>
+    <p>Laura: Dah Dah Dah</p>`,
+    users: {
+      ebRk5MdnEo72Nd9gAAAX: 'Laura',
+      '4n0nhhd0JCzp1NdjAAAN': 'Erica',
+      L9UJwgk8zAwxPemQAAAR: 'Corey',
+    },
+    turnsLeft: 17,
+    gameStarted: 1,
+    nextPrompt: 'Gatling Gun',
+    playerTurn: 2,
+    turnOrder: [
+      { socketId: 'L9UJwgk8zAwxPemQAAAR', name: 'Corey' },
+      { socketId: '4n0nhhd0JCzp1NdjAAAN', name: 'Erica' },
+      { socketId: 'ebRk5MdnEo72Nd9gAAAX', name: 'Laura' },
+    ],
+    hostPlayer: { socketId: 'ebRk5MdnEo72Nd9gAAAX', name: 'Laura' },
+  },
 };
 
 // A route for the client to send info to when a user is attempting to create a room.
@@ -130,7 +130,6 @@ sequelize.sync({ force: false }).then(() => {
 io.on('connection', (socket) => {
   // logs when a user connects
   console.log(`${socket.id} connected`);
-
   // this is a socket event listener for the custom event "new-user", which is emitted by index.js when a user connects to an existent game lobby
   // room and name are both custom pieces of data that were sent by index.js while emitting the new-user event
   // the "socket" object represents a single user, not every user (as io does)
