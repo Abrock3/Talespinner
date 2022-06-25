@@ -46,7 +46,11 @@ const signupFormHandler = async (event) => {
           document.location.replace('/lobby');
         } else {
           const error = await response.json();
-          alert(error.message);
+          if (error.message) {
+            alert(error.message);
+          } else {
+            alert('Sign up failed!');
+          }
         }
       } else {
         window.alert('You must fill out all fields!');
