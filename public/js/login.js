@@ -33,33 +33,51 @@ const signupFormHandler = async (event) => {
     .querySelector('#password-signup-confirm')
     .value.trim();
   // determines that the passwords match
-  if (password.length >= 8) {
-    if (confirm === password) {
-      if (name && email && password) {
-        const response = await fetch('/api/users', {
-          method: 'POST',
-          body: JSON.stringify({ name, email, password }),
-          headers: { 'Content-Type': 'application/json' },
-        });
+  if (
+    /(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/.test(
+      email
+    )
+  ) {
+    if (
+      /[a-zA-Z]/.test(password) &&
+      /\d/.test(password) &&
+      /\W/.test(password)
+    ) {
+      if (password.length >= 10) {
+        if (confirm === password) {
+          if (name && email && password) {
+            const response = await fetch('/api/users', {
+              method: 'POST',
+              body: JSON.stringify({ name, email, password }),
+              headers: { 'Content-Type': 'application/json' },
+            });
 
-        if (response.ok) {
-          document.location.replace('/lobby');
-        } else {
-          const error = await response.json();
-          if (error.message) {
-            alert(error.message);
+            if (response.ok) {
+              document.location.replace('/lobby');
+            } else {
+              const error = await response.json();
+              if (error.message) {
+                alert(error.message);
+              } else {
+                alert('Sign up failed!');
+              }
+            }
           } else {
-            alert('Sign up failed!');
+            window.alert('You must fill out all fields!');
           }
+        } else {
+          window.alert("Your passwords don't match!");
         }
       } else {
-        window.alert('You must fill out all fields!');
+        window.alert('Your password must be at least 10 characters long!');
       }
     } else {
-      window.alert("Your passwords don't match!");
+      window.alert(
+        'Your password must contain at least one letter, number, and symbol.'
+      );
     }
   } else {
-    window.alert('Your password must be at least 8 characters long!');
+    window.alert('You must enter a valid email.');
   }
 };
 
