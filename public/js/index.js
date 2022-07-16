@@ -26,7 +26,8 @@ let finalStory = ``;
 appendMessage('You joined');
 
 // sets the title of the library to the room's name
-libraryNameEl.innerHTML = roomName;
+libraryNameEl.innerHTML = libraryName;
+roomName = libraryNameEl.innerText;
 
 // lets the server know that there's a new user,
 // there is a listener in server.js that will pick this up and update the other users
