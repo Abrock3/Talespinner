@@ -99,6 +99,7 @@ li {
 
 #jumbo-main {
   background-image: url('../images/roomBackground.webp');
+  height: 100vh;
 }
 
 /* ---------- Fonts ---------- */
@@ -110,25 +111,6 @@ li {
 .mainFont {
   font-family: Verdana, Geneva, Tahoma, sans-serif;
   color: black;
-}
-
-/*  ---------- Chat Box ---------- */
-.chat-container {
-  height: 50vh;
-}
-
-#chatCont {
-  margin-left: 5%;
-  width: 30%;
-  margin-top: -3%;
-}
-.chatbox {
-  height: 600px;
-}
-
-ul#chat-container {
-  height: 40vh;
-  overflow-y: auto;
 }
 
 /*  ---------- Book  ---------- */

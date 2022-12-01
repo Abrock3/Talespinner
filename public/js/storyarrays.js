@@ -629,7 +629,7 @@ const characters = [
   'you boss, Angela',
   'the crazy cat lady that lives down the street',
   'a weird uncle',
-  'a werid aunt',
+  'a weird aunt',
   'a child',
   'a crying baby',
   'a child who drank too much coffee',
