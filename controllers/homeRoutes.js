@@ -33,14 +33,10 @@ router.post('/room', withAuth, (req, res) => {
 router.get('/libraries/:room', withAuth, async (req, res) => {
   // if there are 6 people in a room already the user will be redirected to the lobby
   if (req.app.locals.rooms[req.params.room] == null) {
-    return res
-      .status(404)
-      .send("<h1>Error 404: That library doesn't exist!</h1> ")
+    return res.status(404).render('libraryDoesntExist', { layout: 'error' });
   }
   if (Object.keys(req.app.locals.rooms[req.params.room].users).length >= 6) {
-    return res
-      .status(403)
-      .send('<h1>Error 403: That library is full right now!</h1> ')
+    return res.status(403).render('fullLibrary', { layout: 'error' });
   }
   try {
     // Find the logged in user based on the session ID
