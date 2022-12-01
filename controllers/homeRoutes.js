@@ -5,13 +5,12 @@ const withAuth = require('../utils/auth');
 router.get('/', async (req, res) => {
   res.render('landpage', { layout: 'main' });
 });
-// A route for the client to send info to when a user is attempting to create a room.
-// I would have put this and other routes in the controllers folder,
-// but it needs to be able to modify the rooms object
+// Attempts to create a new room for a user
 router.post('/room', withAuth, (req, res) => {
-  // If the user types a room name that already exists, they'll be redirected back to /lobby to try again
   if (req.app.locals.rooms[req.body.room] != null) {
-    return res.redirect('/lobby');
+    return res
+      .status(403)
+      .json({ message: 'That library name already exists!' });
   }
 
   // creates a room key inside of the rooms object; the key's name is identical to the user's input.
@@ -28,19 +27,20 @@ router.post('/room', withAuth, (req, res) => {
   };
   console.log(`Room created: ${req.body.room}`);
   // this will redirect the client to the relative path of "/[their chosen room name]". This is handled below, in the "/:room" route
-  res.redirect(`/libraries/` + req.body.room);
+  res.redirect(`/libraries/${req.body.room}`);
 });
 
-// gets the user's username from the database and passes it into handlebars
-// handlebars will then establish their username as a variable in the client-side JS
 router.get('/libraries/:room', withAuth, async (req, res) => {
-  // if the user attempts to join a room that doesn't exist within the room object, they are redirected to /lobby
-  // also, if there are 6 people in a room already the user will be redirected to the lobby
-  if (
-    req.app.locals.rooms[req.params.room] == null ||
-    Object.keys(req.app.locals.rooms[req.params.room].users).length >= 6
-  ) {
-    return res.redirect('/lobby');
+  // if there are 6 people in a room already the user will be redirected to the lobby
+  if (req.app.locals.rooms[req.params.room] == null) {
+    return res
+      .status(404)
+      .send("<h1>Error 404: That library doesn't exist!</h1> ")
+  }
+  if (Object.keys(req.app.locals.rooms[req.params.room].users).length >= 6) {
+    return res
+      .status(403)
+      .send('<h1>Error 403: That library is full right now!</h1> ')
   }
   try {
     // Find the logged in user based on the session ID
@@ -67,7 +67,6 @@ router.get('/libraries/:room', withAuth, async (req, res) => {
   }
 });
 
-// works similarly to the above route, but passes in whether the user is logged in
 router.get('/lobby', (req, res) => {
   res.render('lobby', { layout: 'main', logged_in: req.session.logged_in });
 });
@@ -76,7 +75,6 @@ router.get('/login', (req, res) => {
   res.render('login', { layout: 'main', logged_in: req.session.logged_in });
 });
 
-// Use withAuth middleware to prevent access to route if the user isn't logged in
 router.get('/profile', withAuth, async (req, res) => {
   try {
     // Find the logged in user based on the session ID

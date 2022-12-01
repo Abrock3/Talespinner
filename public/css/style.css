@@ -1,9 +1,27 @@
-h2 {
-  text-align: center;
+ul {
+  list-style: none;
 }
 
 nav {
-  margin: auto;
+  background: #4b6cb7; /* fallback for old browsers */
+  background: -webkit-linear-gradient(
+    to top,
+    #182848,
+    #4b6cb7
+  ); /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(
+    to top,
+    #182848,
+    #4b6cb7
+  ); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+}
+
+.nav-item {
+  width: 100px;
+}
+
+.modal-button {
+  background-color: 182848;
 }
 
 .form {
@@ -39,56 +57,22 @@ nav {
   border-radius: 0.3rem;
 }
 
-.container.container-fluid {
-  width: 92%;
-}
-.container {
-  width: 85%;
-  max-width: 1200px;
-  margin-left: auto;
-  margin-right: auto;
+.logo {
+  max-height: 100px;
 }
 
-.form .form-input.form-input-squared {
-  border-radius: 0;
-}
-ul {
-  list-style: none;
-}
-
-#users {
-  display: inline;
+@media only screen and (max-width: 400px) {
+  .logo {
+    max-height: 70;
+  }
 }
 
 li {
   margin-bottom: 10px;
 }
 
-#jumbo-main {
-  position: absolute;
-}
-
-.card {
-  text-align: center;
-  position: relative;
-  display: inline;
-  margin: auto;
-}
-
-/* .card-body {
-  margin-bottom: 15px;
-} */
-
-.lobby-title {
-  border-radius: 3%;
-}
-
 .topMargin {
   margin-top: 150px;
-}
-
-.inlinedatshit {
-  display: inline;
 }
 
 /*  ---------- Jumbotrons  ---------- */
@@ -101,15 +85,20 @@ li {
 }
 
 #jumbo-landing {
-  background-image: url('../images/kittyoption.jpeg');
+  background-image: url('../images/landingPageBackground.webp');
 }
 
 #jumbo-lobby {
-  background-image: url('../images/chairbooks.jpeg');
+  background: url('../images/lobbyBackground.webp') no-repeat center center
+    fixed;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
 }
 
 #jumbo-main {
-  background-image: url('../images/desk_book.jpg');
+  background-image: url('../images/roomBackground.webp');
 }
 
 /* ---------- Fonts ---------- */
@@ -123,39 +112,11 @@ li {
   color: black;
 }
 
-/* ---------- Buttons ---------- */
-.btn {
-  margin: 5px 25px;
-}
-
-#searchBtn {
-  margin: auto;
-}
-
-#searchBtn {
-  margin-top: 10px !important;
-}
-
-.title-holder {
-  background-color: gray;
-}
-
-#history,
-#results {
-  top: 32px;
-}
-
-.content {
-  text-align: center;
-  color: black;
-  margin-left: 30%;
-  margin-top: -50%;
-}
-
 /*  ---------- Chat Box ---------- */
 .chat-container {
   height: 50vh;
 }
+
 #chatCont {
   margin-left: 5%;
   width: 30%;
@@ -163,15 +124,6 @@ li {
 }
 .chatbox {
   height: 600px;
-}
-
-#login {
-  text-align: center;
-}
-
-.log {
-  margin-top: 3px;
-  margin-bottom: 5px;
 }
 
 ul#chat-container {
@@ -211,22 +163,6 @@ ul#chat-container {
   left: 350px;
 }
 
-#story-text {
-  width: 300px;
-  height: 500px;
-  color: black;
-}
-
-h3#library-name {
-  display: block;
-  margin: auto;
-}
-
 form#msg {
-  position: relative;
   margin-bottom: 5%;
-}
-
-.hidden {
-  display: none;
 }
