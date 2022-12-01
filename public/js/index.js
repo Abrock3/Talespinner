@@ -85,30 +85,30 @@ function updateFormStatus(data) {
     if (genreSpanEl.innerText === '') {
       randomizePrompts();
     }
-    hostPlayerSettingsFormEl.classList.remove('hidden');
-    submitStoryFormEl.classList.add('hidden');
-    gameStatusInfoParaEl.classList.add('hidden');
+    hostPlayerSettingsFormEl.classList.remove('d-none');
+    submitStoryFormEl.classList.add('d-none');
+    gameStatusInfoParaEl.classList.add('d-none');
   } else if (data.hostPlayer.name !== name && data.gameStarted === 0) {
-    hostPlayerSettingsFormEl.classList.add('hidden');
-    submitStoryFormEl.classList.add('hidden');
-    gameStatusInfoParaEl.classList.remove('hidden');
+    hostPlayerSettingsFormEl.classList.add('d-none');
+    submitStoryFormEl.classList.add('d-none');
+    gameStatusInfoParaEl.classList.remove('d-none');
     gameStatusInfoParaEl.innerText = 'Waiting on the host to start the game...';
   } else if (
     data.turnOrder[data.playerTurn].name === name &&
     data.gameStarted === 1
   ) {
-    hostPlayerSettingsFormEl.classList.add('hidden');
-    submitStoryFormEl.classList.remove('hidden');
-    gameStatusInfoParaEl.classList.add('hidden');
+    hostPlayerSettingsFormEl.classList.add('d-none');
+    submitStoryFormEl.classList.remove('d-none');
+    gameStatusInfoParaEl.classList.add('d-none');
     promptDisplayEl.innerText = data.nextPrompt;
     storyInputEl.focus();
   } else if (
     data.turnOrder[data.playerTurn].name !== name &&
     data.gameStarted === 1
   ) {
-    hostPlayerSettingsFormEl.classList.add('hidden');
-    submitStoryFormEl.classList.add('hidden');
-    gameStatusInfoParaEl.classList.remove('hidden');
+    hostPlayerSettingsFormEl.classList.add('d-none');
+    submitStoryFormEl.classList.add('d-none');
+    gameStatusInfoParaEl.classList.remove('d-none');
     gameStatusInfoParaEl.innerText = `Currently it's ${
       data.turnOrder[data.playerTurn].name
     }'s turn; they're writing a new line with this prompt: ${data.nextPrompt}`;
@@ -128,9 +128,9 @@ function fullGameStatusUpdate(data) {
 socket.on('game-status-update', (data) => {
   fullGameStatusUpdate(data);
   if (data.turnsLeft === 0) {
-    hostPlayerSettingsFormEl.classList.add('hidden');
-    submitStoryFormEl.classList.add('hidden');
-    gameStatusInfoParaEl.classList.remove('hidden');
+    hostPlayerSettingsFormEl.classList.add('d-none');
+    submitStoryFormEl.classList.add('d-none');
+    gameStatusInfoParaEl.classList.remove('d-none');
     gameStatusInfoParaEl.innerText =
       'The game is over! I hope you had fun writing a story with your friends!';
     // this determines if the user is one of the "players", and if so allows them to save the story
@@ -144,7 +144,7 @@ socket.on('game-status-update', (data) => {
     }
     if (playerBool) {
       finalStory = data.cumulativeStory;
-      storySaveBtnEl.classList.remove('hidden');
+      storySaveBtnEl.classList.remove('d-none');
     }
   }
 });
@@ -153,9 +153,9 @@ socket.on('game-status-update', (data) => {
 // after 30 seconds without a user connected any room will be destroyed. If a user reconnects while their client
 // is still in a lobby, this event gets displayed to them
 socket.on('game-does-not-exist', () => {
-  hostPlayerSettingsFormEl.classList.add('hidden');
-  submitStoryFormEl.classList.add('hidden');
-  gameStatusInfoParaEl.classList.remove('hidden');
+  hostPlayerSettingsFormEl.classList.add('d-none');
+  submitStoryFormEl.classList.add('d-none');
+  gameStatusInfoParaEl.classList.remove('d-none');
   gameStatusInfoParaEl.innerText = `This room no longer exists; go back to the lobby to create another game.`;
 });
 

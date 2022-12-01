@@ -1,11 +1,11 @@
 <div class='row'>
   <div class='col-auto'>
-    <h2>Welcome, {{name}}!</h2>
+    <h2 class='text-center'>Welcome, {{name}}!</h2>
 
   </div>
 </div>
 {{#if libraries.length}}
-  <h2>Your Personal Library:</h2>
+  <h2 class='text-center'>Your Personal Library:</h2>
   <div class='col-md-6 library-list'>
     {{#each libraries as |library|}}
       <div class='row mb-2'>
@@ -23,8 +23,8 @@
     {{/each}}
   </div>
 {{else}}
-  <h2>You need to work on your personal library! Create a room, invite your
-    friends, and save the story once you finish!</h2>
+  <h2 class='text-center'>You need to work on your personal library! Create a
+    room, invite your friends, and save the story once you finish!</h2>
 {{/if}}
 
 <script src='./js/profile.js'></script>

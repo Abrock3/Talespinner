@@ -42,10 +42,10 @@ THEN the entire story will be unfolded in the written story section
 ```
 
 ## Images:
-![plot](./public/images/Landing%20Page.PNG)
-![plot](./public/images/Lobby.PNG)
-![plot](./public/images/Lobby_with_create.PNG)
-![plot](./public/images/Chat.PNG)
+![plot](./public/images/landingPageScreenshot.webp)
+![plot](./public/images/lobbyScreenshot.webp)
+![plot](./public/images/lobbyScreenshotWithCreate.webp)
+![plot](./public/images/chatScreenshot.webp)
 
 ## Pages:
 
